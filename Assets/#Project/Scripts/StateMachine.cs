@@ -37,11 +37,12 @@ public class StateMachine : MonoBehaviour
     void Start()
     {
         if(terrainInfo == null){
-            terrainInfo = FindObjectWithType<TerrainInfo>();
+            terrainInfo = FindObjectOfType<TerrainInfo>();
         }
+
         state = GameState.WaitForGoal;
 
-        Instantiate(goal, spawnArea.position, transform.rotation);
+        goal = Instantiate(goal, spawnArea.position, transform.rotation);
 
         // else if (state == GameState.WaitForP1)
         // {
@@ -61,10 +62,16 @@ public class StateMachine : MonoBehaviour
         UpdateState();
     }
 
-    private void UpdateWaitForGoal(){
-        if(terrainInfo != null && terrainInfo.IsIn(goal)){
-        state = GameState.GoalLaunched;
+    private void UpdateWaitForGoal()
+    {
+        if(terrainInfo.IsIn(goal)){
+            state = GameState.GoalLaunched;
         }
+    }
+
+    private void UpdateGoalLaunched()
+    {
+        // ici code : if(terrainInfo.IsStable(goal)){ state = GameState.WaitForP1;}
     }
 
     public void UpdateState()
@@ -72,27 +79,28 @@ public class StateMachine : MonoBehaviour
         switch (state)
         {
             case GameState.WaitForGoal:
+            currentStateText.SetText("Wait for goal");
             UpdateWaitForGoal();
             break;
 
             case GameState.GoalLaunched:
-            currentStateText.SetText("Goal was launched");
+            currentStateText.SetText("Goal launched");
             break;
 
             case GameState.WaitForP1:
-            currentStateText.SetText("Player 1 throw the ball");
+            currentStateText.SetText("Wait for P1");
             break;
 
             case GameState.P1HasPlayed:
-            currentStateText.SetText("Player 1 has played");
+            currentStateText.SetText("P1 has played");
             break;
 
             case GameState.WaitForP2:
-            currentStateText.SetText("Player 2 throw the ball");
+            currentStateText.SetText("Wait for P2");
             break;
 
             case GameState.P2HasPlayed:
-            currentStateText.SetText("Player 2 has played");
+            currentStateText.SetText("P2 has played");
             break;
 
             case GameState.RoundFinished:
@@ -100,7 +108,7 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.ValidationScore:
-            currentStateText.SetText("Player X won !");
+            currentStateText.SetText("Validation Score");
             break;
         }
 

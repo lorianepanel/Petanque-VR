@@ -29,7 +29,7 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
-        // Instanciate()
+
         goal = GameObject.FindWithTag("Goal")?.transform;
 
         // isStabilized = ballIsStabilized.isStable;
@@ -41,13 +41,11 @@ public class ScoreManager : MonoBehaviour
     void Update()
     {
 
-        
         balls = new(GameObject.FindGameObjectsWithTag("Ball"));
 
         // if(isStabilized == true) AddScore();
 
         AddScore();
-
 
     }
 
@@ -56,6 +54,7 @@ public class ScoreManager : MonoBehaviour
     void AddScore()
     {
         if(goal == null || balls.Count == 0) return;
+
         BallBehaviour.PlayerColor currentPlayerColor;
         float distance = CheckTheDistance(out currentPlayerColor);
         // distanceText.SetText($"Distance from goal : {distance:f}m");

@@ -6,21 +6,27 @@ using UnityEngine;
 public class TerrainInfo : MonoBehaviour
 {
 
-    List<GameObject> items = new List<GameObject>();
+    public List<GameObject> listOfProjectiles = new List<GameObject>();
     // Start is called before the first frame update
     
     void OnTriggerEnter(Collider collider){
-        Debug.Log($"^{collider.name} is on the terrain");
-        items.Add(collider.gameObject);
+        listOfProjectiles.Add(collider.gameObject);
+        Debug.Log($"{collider.name} is on the terrain");
     }
 
     void OnTriggerExit(Collider collider){
-        items.Remove(collider.gameObject);
+        listOfProjectiles.Remove(collider.gameObject);
+        Debug.Log($"{collider.name} is not on the terrain anymore");
     }
     
 
-    public bool IsIn(GameObject go){
-        return items.Contains(go);
-        Debug.Log($"^{collider.name} is not on the terrain anymore");
+    public bool IsIn(GameObject projectiles){
+        return listOfProjectiles.Contains(projectiles);
     }
+
+
+    // TU EN ETAIS LA ! Faire un boolean pour savoir si les projectiles sont stabilisés ou pas. Va chercher les rb des projectiles lancés
+    // public bool IsStable(GameObject projectiles){
+    //     return projectiles.Rigidbody;
+    // }
 }
