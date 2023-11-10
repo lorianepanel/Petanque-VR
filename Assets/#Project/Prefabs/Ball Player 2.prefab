@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4340046579065936301}
   - component: {fileID: 4255906848308445167}
   m_Layer: 0
-  m_Name: Red
+  m_Name: Ball Player 2
   m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -19,10 +19,10 @@ public class ScoreManager : MonoBehaviour
 
 
 
-    public BallBehaviour ballIsStabilized;
+    // public BallBehaviour ballIsStabilized;
 
-    [SerializeField]
-    private bool isStabilized;
+    // [SerializeField]
+    // private bool isStabilized;
 
 
 
@@ -30,10 +30,10 @@ public class ScoreManager : MonoBehaviour
     void Start()
     {
         // Instanciate()
-        goal = GameObject.FindWithTag("Goal").transform;
+        goal = GameObject.FindWithTag("Goal")?.transform;
 
-        isStabilized = ballIsStabilized.isStable;
-        isStabilized = false;
+        // isStabilized = ballIsStabilized.isStable;
+        // isStabilized = false;
         
     }
 
@@ -44,7 +44,9 @@ public class ScoreManager : MonoBehaviour
         
         balls = new(GameObject.FindGameObjectsWithTag("Ball"));
 
-        if(isStabilized == true) AddScore();
+        // if(isStabilized == true) AddScore();
+
+        AddScore();
 
 
     }
@@ -53,6 +55,7 @@ public class ScoreManager : MonoBehaviour
     // fonction pour gérer le score qui est lancée quand isStable = true
     void AddScore()
     {
+        if(goal == null || balls.Count == 0) return;
         BallBehaviour.PlayerColor currentPlayerColor;
         float distance = CheckTheDistance(out currentPlayerColor);
         // distanceText.SetText($"Distance from goal : {distance:f}m");

@@ -17,22 +17,21 @@ public class BallBehaviour : MonoBehaviour
 
     public PlayerColor playerColor;
 
-    private Rigidbody rb;
+    private Rigidbody ballRb;
 
-    public bool isStable 
+    public bool ballIsStable 
     {
-        get { return rb.velocity.magnitude < 0.001f; }
-
+        get { return ballRb.velocity.magnitude < 0.001f; }
     }
     
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        ballRb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        Debug.Log(rb.velocity.magnitude);
+        // Debug.Log(rb.velocity.magnitude);
     }
 
 }
