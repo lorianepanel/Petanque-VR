@@ -9,20 +9,43 @@ public class TerrainInfo : MonoBehaviour
 
     public List<GameObject> listOfProjectiles = new List<GameObject>();
 
+    private ScoreManager scoreManager;
+
     private Rigidbody rb;
 
     private XRGrabInteractable grab;
     
+
+    private void Start(){
+        scoreManager = FindObjectOfType<ScoreManager>();
+        if(scoreManager == null){
+            Debug.LogError("TerrainInfo needs a score manager");
+        }
+    }
+
     void OnTriggerEnter(Collider collider){
+
         listOfProjectiles.Add(collider.gameObject);
-        Debug.Log($"{collider.name} on the playable surface.");
+        // Debug.Log($"{collider.name} is on the terrain.");
+
+        if(collider.CompareTag("Ball")){
+            scoreManager.balls.Add(collider.gameObject);
+            // Debug.Log($"{collider.name} is in {nameof(scoreManager.balls)}");
+        }
+        
+
         grab = collider.GetComponent<XRGrabInteractable>();
         grab.enabled = false; 
     }
 
     void OnTriggerExit(Collider collider){
         listOfProjectiles.Remove(collider.gameObject);
-        Debug.Log($"{collider.name} not on the playable surface anymore");
+        // Debug.Log($"{collider.name} is not on the terrain anymore.");
+
+        if(collider.CompareTag("Ball")){
+            scoreManager.balls.Remove(collider.gameObject);
+        }
+        
         grab = collider.GetComponent<XRGrabInteractable>();
         grab.enabled = true; 
     }
@@ -33,15 +56,16 @@ public class TerrainInfo : MonoBehaviour
     }
 
 
-
-    // Faire un autre boolean pour savoir si les projectiles sont stabilisés ou pas. Va chercher les rb des projectiles lancés
     public bool IsStable(GameObject projectile){
         rb = projectile.GetComponent<Rigidbody>();
         if (rb != null) {
-            Debug.Log($"{projectile.name} is moving.");
-            return rb.velocity.magnitude < 0.001f;     
+            return rb.velocity.magnitude < 0.1f;     
         }
         return false;
     }
+
+    // public bool IsTheClosest(GameObject projectile){
+    //     scoreManager.currentPlayerColor;
+    // }
     
 }

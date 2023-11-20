@@ -14,6 +14,8 @@ public class BallBehaviour : MonoBehaviour
         None
     }
 
+    public static PlayerColor[] playerColors = new PlayerColor[2] { PlayerColor.Blue, PlayerColor.Red};
+
 
     public PlayerColor playerColor;
 

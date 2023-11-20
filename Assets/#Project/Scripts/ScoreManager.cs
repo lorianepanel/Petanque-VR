@@ -7,101 +7,122 @@ using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
-    private List<GameObject> balls;
-    private Transform goal;
+    public List<GameObject> balls;
 
-    public TMP_Text scorePlayerBlueText;
-    public TMP_Text scorePlayerRedText;
+    public TMP_Text scoreP1Text;
+    public TMP_Text scoreP2Text;
 
-    // public TMP_Text distanceText;
+    public TMP_Text distanceText;
 
     private float closestDistance;
 
+    [SerializeField]
+    private Transform _goal;
+    
+    public Transform goal {
+        get { 
+            if (_goal == null) {
+                _goal = GameObject.FindWithTag("Goal")?.transform;
+                }
+            return _goal;}
+    }
 
-
-    // public BallBehaviour ballIsStabilized;
-
-    // [SerializeField]
-    // private bool isStabilized;
-
-
+    // private int scoreP1;
+    // private int scoreP2;
 
 
     void Start()
     {
-
-        goal = GameObject.FindWithTag("Goal")?.transform;
-
-        // isStabilized = ballIsStabilized.isStable;
-        // isStabilized = false;
-        
+        // scoreP1 = 0;
+        // scoreP2 = 0;
+        Debug.Log($"Nombre de balles dans la liste : {balls.Count}");
     }
-
+    
 
     void Update()
     {
-
-        balls = new(GameObject.FindGameObjectsWithTag("Ball"));
-
-        // if(isStabilized == true) AddScore();
-
-        AddScore();
-
-    }
-
-
-    // fonction pour gérer le score qui est lancée quand isStable = true
-    void AddScore()
-    {
         if(goal == null || balls.Count == 0) return;
+
 
         BallBehaviour.PlayerColor currentPlayerColor;
         float distance = CheckTheDistance(out currentPlayerColor);
-        // distanceText.SetText($"Distance from goal : {distance:f}m");
+        distanceText.SetText($"Closest player : {currentPlayerColor} <br>Distance from goal : {distance:f}m");
         
-        int scorePlayerBlue = 0;
-        int scorePlayerRed = 0;
+        
+        int scoreP1 = 0;
+        int scoreP2 = 0;
         BallBehaviour.PlayerColor memoColor = currentPlayerColor;
 
-        while(memoColor == currentPlayerColor)
+        if(memoColor == currentPlayerColor)
         {
             if(currentPlayerColor == BallBehaviour.PlayerColor.Blue)
             {
-                scorePlayerBlue++;
-                scorePlayerBlueText.SetText($"Blue : {scorePlayerBlue} points");
+                scoreP1++;
+                scoreP1Text.SetText($"P1 : {scoreP1} points");
             } 
             else if(currentPlayerColor == BallBehaviour.PlayerColor.Red)
             {
-                scorePlayerRed++;
-                scorePlayerRedText.SetText($"Red : {scorePlayerRed} points");
+                scoreP2++;
+                scoreP2Text.SetText($"P2 : {scoreP2} points");
             } 
             CheckTheDistance(out currentPlayerColor);
         }
+
+
+        Debug.Log($"Nombre de balles dans la liste : {balls.Count}");   
+
+
+
     }
 
 
+
+
     // methode qui check la distance entre toutes les boules et le goal, out la couleur de la ball la plus près, return la plus petite distance
-    private float CheckTheDistance(out BallBehaviour.PlayerColor playerColor)
+    public float CheckTheDistance(out BallBehaviour.PlayerColor playerColor)
     {
 
+        
         playerColor = BallBehaviour.PlayerColor.None;
         closestDistance = Mathf.Infinity;
-        GameObject memorizedBall = null;
+        //GameObject memorizedBall = null;
 
         foreach (GameObject ball in balls)
         {
             float distanceFromGoal = Vector3.Distance(ball.transform.position, goal.position);
             // Debug.Log($"{ball.name} : {distanceFromGoal}");
+            
 
             if(distanceFromGoal < closestDistance)
             {
                 closestDistance = distanceFromGoal;
                 playerColor = ball.GetComponent<BallBehaviour>().playerColor;
-                memorizedBall = ball;               
+                //memorizedBall = ball;               
             }
         }
-        if (memorizedBall != null) balls.Remove(memorizedBall);
+        //if (memorizedBall != null) balls.Remove(memorizedBall);
         return closestDistance;
+    }
+
+    
+
+    public int GetTheLooser(){
+
+        if (balls.Count == 2) return 1;
+
+        if (balls.Count == 1) return 2;
+
+
+        BallBehaviour.PlayerColor playerColor = BallBehaviour.PlayerColor.None;
+        CheckTheDistance(out playerColor);   
+
+        int nPlayer = 0;
+        foreach (BallBehaviour.PlayerColor ballColor in BallBehaviour.playerColors){
+            if(ballColor == playerColor) return nPlayer;
+            nPlayer++;
+        }
+        
+        return -1;
     }
 
 }
