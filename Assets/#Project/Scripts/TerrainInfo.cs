@@ -64,8 +64,5 @@ public class TerrainInfo : MonoBehaviour
         return false;
     }
 
-    // public bool IsTheClosest(GameObject projectile){
-    //     scoreManager.currentPlayerColor;
-    // }
     
 }
