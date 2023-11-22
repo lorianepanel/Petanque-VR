@@ -96,7 +96,8 @@ public class StateMachine : MonoBehaviour
         if(terrainInfo.IsIn(currentBall) && terrainInfo.IsStable(currentBall))
         {
             // si BallP1 est sur le terrain et stable : état suivant
-            Debug.Log($"Is in : {terrainInfo.IsIn(currentBall)}, Is stable : {terrainInfo.IsStable(currentBall)}.");
+            // Debug.Log($"Is in : {terrainInfo.IsIn(currentBall)}, Is stable : {terrainInfo.IsStable(currentBall)}.");
+            scoreManager.UpdateCheckTheDistance();
             state = GameState.P1HasPlayed;
         }
     }
@@ -106,26 +107,27 @@ public class StateMachine : MonoBehaviour
         
         // Debug.Log($"Player1 still have shoot: {PlayerStillHaveShoot(1)}");
         // Debug.Log($"Player2 still have shoot: {PlayerStillHaveShoot(2)}");
-        // Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
+        Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
 
         //condition a : si P1 et P2 n'ont plus de balles : état RoundFinished
         if (!PlayerStillHaveShoot(1) && !PlayerStillHaveShoot(2))
         {
-            Debug.Log($"PLAYERS DON'T HAVE A SHOOT.");
+            scoreManager.UpdateCheckTheDistance();
+            scoreManager.CalculateScores();
             state = GameState.RoundFinished;
         }
 
         // condition b : si P1 a encore des balles et si P1 est perdant ou si P2 n'a plus de balles => P1 rejoue
         else if(PlayerStillHaveShoot(1) && (scoreManager.GetTheLooser() == 1 || !PlayerStillHaveShoot(2)))
         {
-            Debug.Log($"P1 TURN");
+            // Debug.Log($"P1 TURN");
             state = GameState.WaitForP1;
             SpawnBall(1);
         }
         
         // condition c : si P2 a encore des balles et si P2 est perdant ou qi P1 n'a plus de balles => au tour de P2
         else if(PlayerStillHaveShoot(2) && (scoreManager.GetTheLooser() == 2 || !PlayerStillHaveShoot(1))){
-            Debug.Log($"P2 TURN");
+            // Debug.Log($"P2 TURN");
             state = GameState.WaitForP2;
             SpawnBall(2);
         }
@@ -135,6 +137,7 @@ public class StateMachine : MonoBehaviour
     {
         if(terrainInfo.IsIn(currentBall) && terrainInfo.IsStable(currentBall))
         {
+            scoreManager.UpdateCheckTheDistance();
             // si BallP2 est sur le terrain et stable : état suivant
             state = GameState.P2HasPlayed;
         }
@@ -143,6 +146,10 @@ public class StateMachine : MonoBehaviour
 
     private void UpdateP2HasPlayed()
     {
+        // Debug.Log($"Player1 still have shoot: {PlayerStillHaveShoot(1)}");
+        // Debug.Log($"Player2 still have shoot: {PlayerStillHaveShoot(2)}");
+        Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
+
         if (!terrainInfo.IsIn(currentBall) || !terrainInfo.IsStable(currentBall))
         {
             // Debug.Log($"Is in : {terrainInfo.IsIn(currentBall)}, Is stable : {terrainInfo.IsStable(currentBall)}.");
@@ -152,7 +159,9 @@ public class StateMachine : MonoBehaviour
         //condition a' : si P1 et P2 n'ont plus de balles : état RoundFinished
         else if (!PlayerStillHaveShoot(1) && !PlayerStillHaveShoot(2))
         {
-            state = GameState.RoundFinished;
+            scoreManager.UpdateCheckTheDistance();
+            scoreManager.CalculateScores();
+            state = GameState.RoundFinished;   
         }
 
         // condition b' : si P2 a encore des balles et si P2 est perdant ou si P1 n'a plus de balles => P2 rejoue
@@ -212,7 +221,6 @@ public class StateMachine : MonoBehaviour
 
             case GameState.RoundFinished:
             currentStateText.SetText("Round finished");
-            // scoreManager.AddPoints();
             UpdateRoundFinished();
             break;
         }

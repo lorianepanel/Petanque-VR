@@ -7,27 +7,17 @@ using UnityEngine;
 public class BallBehaviour : MonoBehaviour
 {
 
-    public enum PlayerColor
+    public enum PlayerNumber
     {
-        Red,
-        Blue,
+        P1,
+        P2,
         None
     }
 
-    public static PlayerColor[] playerColors = new PlayerColor[2] { PlayerColor.Blue, PlayerColor.Red};
+    public static PlayerNumber[] playerNumbers = new PlayerNumber[2] { PlayerNumber.P1, PlayerNumber.P2};
 
 
-    public PlayerColor playerColor;
+    public PlayerNumber playerNumber;
 
-    
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
 
 }

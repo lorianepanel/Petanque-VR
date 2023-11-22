@@ -14,7 +14,7 @@ public class ScoreManager : MonoBehaviour
 
     public TMP_Text distanceText;
 
-    private float smallestDistance;
+    private float smallestDistanceFromGoal;
 
     [SerializeField]
     private Transform _goal;
@@ -27,112 +27,82 @@ public class ScoreManager : MonoBehaviour
             return _goal;}
     }
 
-    // private int scoreP1;
-    // private int scoreP2;
-    void Start(){
+    private int scoreP1 = 0;
+    private int scoreP2 = 0;
+    private int onePoint = 1;
 
-    }
-
-    void Update(){
-        if(goal == null || balls.Count == 0) return;
-
-        BallBehaviour.PlayerColor currentPlayerColor;
-        float distance = CheckTheDistance(out currentPlayerColor);
-        distanceText.SetText($"Closest player : {currentPlayerColor} <br>Distance from goal : {distance:f}m");
-        
-        
-        int scoreP1 = 0;
-        int scoreP2 = 0;
-        BallBehaviour.PlayerColor memoColor = currentPlayerColor;
-
-        if(memoColor == currentPlayerColor)
-        {
-            if(currentPlayerColor == BallBehaviour.PlayerColor.Blue)
-            {
-                scoreP1++;
-                scoreP1Text.SetText($"P1 : {scoreP1} points");
-            } 
-            else if(currentPlayerColor == BallBehaviour.PlayerColor.Red)
-            {
-                scoreP2++;
-                scoreP2Text.SetText($"P2 : {scoreP2} points");
-            } 
-            CheckTheDistance(out currentPlayerColor);
-        } 
-    }
-
-    // public void UpdateCheckTheDistance()
-    // {
-    //     if(goal == null || balls.Count == 0) return;
-
-    //     BallBehaviour.PlayerColor currentPlayerColor;
-    //     float distance = CheckTheDistance(out currentPlayerColor);
-    //     distanceText.SetText($"Closest player : {currentPlayerColor} <br>Distance from goal : {distance:f}m");
-        
-        
+    // void Start(){
     //     scoreP1 = 0;
     //     scoreP2 = 0;
-    //     BallBehaviour.PlayerColor memoColor = currentPlayerColor;
-
-    //     if(memoColor == currentPlayerColor)
-    //     {
-    //         if(currentPlayerColor == BallBehaviour.PlayerColor.Blue)
-    //         {
-    //             scoreP1++;
-    //         } 
-    //         else if(currentPlayerColor == BallBehaviour.PlayerColor.Red)
-    //         {
-    //             scoreP2++;
-    //         } 
-    //         CheckTheDistance(out currentPlayerColor);
-    //     } 
-
     // }
 
-    // public void AddPoints()
-    // {
-    //     scoreP1Text.SetText($"P1 : {scoreP1} points");
-    //     scoreP2Text.SetText($"P2 : {scoreP2} points");
-    // }
+    void Update(){
+
+    }
+
+    public void UpdateCheckTheDistance()
+    {
+        if(goal == null || balls.Count == 0) return;
+
+        BallBehaviour.PlayerNumber currentPlayerNumber;
+        float distance = CheckTheDistance(out currentPlayerNumber);
+        distanceText.SetText($"Closest player : {currentPlayerNumber} <br>Distance from goal : {distance:f}m");   
+    }
+
+    public void CalculateScores()
+    {
+
+        BallBehaviour.PlayerNumber winner;
+        CheckTheDistance(out winner);
+        Debug.Log($"1 point for {winner}");
+        if (winner == BallBehaviour.PlayerNumber.P1){
+            scoreP1 += onePoint;
+            scoreP1Text.SetText($"P1 : {scoreP1} points");
+        }
+        else if (winner == BallBehaviour.PlayerNumber.P2){
+            scoreP2 += onePoint;
+            scoreP2Text.SetText($"P2 : {scoreP2} points");
+        }
+    }
 
 
 
 
     // methode qui check la distance entre toutes les boules et le goal, out la couleur de la ball la plus près, return la plus petite distance
-    public float CheckTheDistance(out BallBehaviour.PlayerColor playerColor)
+    public float CheckTheDistance(out BallBehaviour.PlayerNumber playerNumber)
     {
 
-        playerColor = BallBehaviour.PlayerColor.None;
-        smallestDistance = Mathf.Infinity;
+        playerNumber = BallBehaviour.PlayerNumber.None;
+        smallestDistanceFromGoal = Mathf.Infinity;
 
         foreach (GameObject ball in balls)
         {
-            float distanceFromGoal = Vector3.Distance(ball.transform.position, goal.position);
+            float distanceBetweenGoalAndBall = Vector3.Distance(ball.transform.position, goal.position);
             
             
-            if(distanceFromGoal < smallestDistance)
+            if(distanceBetweenGoalAndBall < smallestDistanceFromGoal)
             {
-                smallestDistance = distanceFromGoal;
-                playerColor = ball.GetComponent<BallBehaviour>().playerColor;              
+                smallestDistanceFromGoal = distanceBetweenGoalAndBall;
+                playerNumber = ball.GetComponent<BallBehaviour>().playerNumber;              
             }
         }
-        return smallestDistance;
+        return smallestDistanceFromGoal;
     }
 
     
 
     public int GetTheLooser(){
 
-        BallBehaviour.PlayerColor playerColor = BallBehaviour.PlayerColor.None;
-        CheckTheDistance(out playerColor);  
-        Debug.Log($"Player distance: {playerColor}"); 
+        BallBehaviour.PlayerNumber playerNumber = BallBehaviour.PlayerNumber.None;
+        CheckTheDistance(out playerNumber);  
+        Debug.Log($"Ball la plus près : {playerNumber}"); 
 
 
         int nPlayer = 0;
         bool ok = false;
-        foreach (BallBehaviour.PlayerColor ballColor in BallBehaviour.playerColors){
+        foreach (BallBehaviour.PlayerNumber ballNumber in BallBehaviour.playerNumbers){
             nPlayer++;
-            if(ballColor == playerColor) {
+            if(ballNumber == playerNumber) {
                 ok = true;
                 break;
             }

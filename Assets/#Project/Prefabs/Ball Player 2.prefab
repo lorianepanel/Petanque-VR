@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 793bc550fc83e154fbae91f97762bebc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerColor: 0
+  playerNumber: 1
 --- !u!54 &4340046579065936301
 Rigidbody:
   m_ObjectHideFlags: 0
