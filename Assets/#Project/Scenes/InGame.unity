@@ -1190,7 +1190,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 597232870}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &597232873
 Camera:
   m_ObjectHideFlags: 0
@@ -1476,10 +1476,10 @@ MonoBehaviour:
   ballPrefabs:
   - {fileID: 96623856952081888, guid: 087b23efb3582cc418602bc15aeba957, type: 3}
   - {fileID: 8276137767622365270, guid: fb1e80414957d3843ae7b903bed790d1, type: 3}
-  numberOfShoots: 0300000003000000
+  numberOfShoots: 0200000002000000
   instantiateArea: {fileID: 409651774}
   spawnArea: {fileID: 1857270769}
-  state: 3
+  state: 0
   currentStateText: {fileID: 2147034489}
 --- !u!4 &1067436917
 Transform:

@@ -27,12 +27,13 @@ public class ScoreManager : MonoBehaviour
             return _goal;}
     }
 
-    private int scoreP1;
-    private int scoreP2;
+    // private int scoreP1;
+    // private int scoreP2;
+    void Start(){
 
+    }
 
-    public void UpdateCheckTheDistance()
-    {
+    void Update(){
         if(goal == null || balls.Count == 0) return;
 
         BallBehaviour.PlayerColor currentPlayerColor;
@@ -40,8 +41,8 @@ public class ScoreManager : MonoBehaviour
         distanceText.SetText($"Closest player : {currentPlayerColor} <br>Distance from goal : {distance:f}m");
         
         
-        scoreP1 = 0;
-        scoreP2 = 0;
+        int scoreP1 = 0;
+        int scoreP2 = 0;
         BallBehaviour.PlayerColor memoColor = currentPlayerColor;
 
         if(memoColor == currentPlayerColor)
@@ -49,21 +50,50 @@ public class ScoreManager : MonoBehaviour
             if(currentPlayerColor == BallBehaviour.PlayerColor.Blue)
             {
                 scoreP1++;
+                scoreP1Text.SetText($"P1 : {scoreP1} points");
             } 
             else if(currentPlayerColor == BallBehaviour.PlayerColor.Red)
             {
                 scoreP2++;
+                scoreP2Text.SetText($"P2 : {scoreP2} points");
             } 
             CheckTheDistance(out currentPlayerColor);
         } 
-
     }
 
-    public void AddPoints()
-    {
-        scoreP1Text.SetText($"P1 : {scoreP1} points");
-        scoreP2Text.SetText($"P2 : {scoreP2} points");
-    }
+    // public void UpdateCheckTheDistance()
+    // {
+    //     if(goal == null || balls.Count == 0) return;
+
+    //     BallBehaviour.PlayerColor currentPlayerColor;
+    //     float distance = CheckTheDistance(out currentPlayerColor);
+    //     distanceText.SetText($"Closest player : {currentPlayerColor} <br>Distance from goal : {distance:f}m");
+        
+        
+    //     scoreP1 = 0;
+    //     scoreP2 = 0;
+    //     BallBehaviour.PlayerColor memoColor = currentPlayerColor;
+
+    //     if(memoColor == currentPlayerColor)
+    //     {
+    //         if(currentPlayerColor == BallBehaviour.PlayerColor.Blue)
+    //         {
+    //             scoreP1++;
+    //         } 
+    //         else if(currentPlayerColor == BallBehaviour.PlayerColor.Red)
+    //         {
+    //             scoreP2++;
+    //         } 
+    //         CheckTheDistance(out currentPlayerColor);
+    //     } 
+
+    // }
+
+    // public void AddPoints()
+    // {
+    //     scoreP1Text.SetText($"P1 : {scoreP1} points");
+    //     scoreP2Text.SetText($"P2 : {scoreP2} points");
+    // }
 
 
 

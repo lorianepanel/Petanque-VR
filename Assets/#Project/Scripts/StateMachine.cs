@@ -68,7 +68,7 @@ public class StateMachine : MonoBehaviour
     void Update()
     {
         UpdateState();
-        scoreManager.UpdateCheckTheDistance();
+
     }
 
 
@@ -212,7 +212,7 @@ public class StateMachine : MonoBehaviour
 
             case GameState.RoundFinished:
             currentStateText.SetText("Round finished");
-            scoreManager.AddPoints();
+            // scoreManager.AddPoints();
             UpdateRoundFinished();
             break;
         }
