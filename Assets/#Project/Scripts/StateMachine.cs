@@ -68,7 +68,6 @@ public class StateMachine : MonoBehaviour
     void Update()
     {
         UpdateState();
-
     }
 
 
