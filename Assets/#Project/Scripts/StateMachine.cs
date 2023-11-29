@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using Unity.XR.CoreUtils;
 using Unity.Mathematics;
 
@@ -16,6 +17,7 @@ public class StateMachine : MonoBehaviour
 
     public int[] numberOfShoots = new int[2] {3,3};
 
+    public UnityEvent whenStateChanged;
 
     [SerializeField] Transform instantiateArea;
 
@@ -33,6 +35,7 @@ public class StateMachine : MonoBehaviour
     }
 
     public GameState state;
+    public GameState previousState;
 
     [SerializeField]
     private TMP_Text currentStateText;
@@ -52,6 +55,7 @@ public class StateMachine : MonoBehaviour
         }
 
         state = GameState.WaitForGoal;
+        previousState = state;
 
         goal = Instantiate(goal, instantiateArea.position, transform.rotation);
 
@@ -186,6 +190,10 @@ public class StateMachine : MonoBehaviour
 
     public void UpdateState()
     {
+        if(state != previousState){
+            whenStateChanged?.Invoke();
+        }
+        previousState = state;
         switch (state)
         {
             case GameState.WaitForGoal:
