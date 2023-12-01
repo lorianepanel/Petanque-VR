@@ -6,20 +6,26 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using Unity.XR.CoreUtils;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 
 public class StateMachine : MonoBehaviour
 {
-    public GameObject goal;
+    [HideInInspector] public GameObject goal;
 
-    public GameObject currentBall;
+    public GameObject goalPrefab;
+
+    [HideInInspector] public GameObject currentBall;
 
     public GameObject[] ballPrefabs;
 
+    private List<GameObject> balls = new List<GameObject>();
+
     public int[] numberOfShoots = new int[2] {3,3};
+    
 
     public UnityEvent whenStateChanged;
 
-    [SerializeField] Transform instantiateArea;
+    [SerializeField] Transform stockArea;
 
     [SerializeField] Transform spawnArea;
 
@@ -50,21 +56,22 @@ public class StateMachine : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         if(terrainInfo == null){
             terrainInfo = FindObjectOfType<TerrainInfo>();
         }
 
+        if(scoreManager == null){
+            scoreManager = FindObjectOfType<ScoreManager>();
+        }
+
+        CreateGoal();
+        CreateBalls();
+
+
         state = GameState.WaitForGoal;
         previousState = state;
 
-        goal = Instantiate(goal, instantiateArea.position, transform.rotation);
-
-
-        goal.GetComponent<Rigidbody>().position = spawnArea.position;
-        
-        if(scoreManager == null){
-        scoreManager = FindObjectOfType<ScoreManager>();
-        }
 
     }
 
@@ -183,7 +190,19 @@ public class StateMachine : MonoBehaviour
 
     private void UpdateRoundFinished()
     {
-        Debug.Log("Round finished");
+        Debug.Log("Update Round finished");
+
+        RemoveAllBalls();
+
+        if(scoreManager.scoreP1 == scoreManager.winningScore || scoreManager.scoreP2 == scoreManager.winningScore)
+        {
+            Debug.Log("Scene de fin démarre");
+        }
+        else if(scoreManager.scoreP1 < scoreManager.winningScore || scoreManager.scoreP2 < scoreManager.winningScore)
+        {
+            state = GameState.WaitForGoal;
+            SpawnGoal();
+        }
     }
 
 
@@ -197,17 +216,17 @@ public class StateMachine : MonoBehaviour
         switch (state)
         {
             case GameState.WaitForGoal:
-            currentStateText.SetText("Wait for goal");
+            currentStateText.SetText("P1 : Throw the goal");
             UpdateWaitForGoal();
             break;
 
             case GameState.GoalLaunched:
-            currentStateText.SetText("Goal launched");
+            currentStateText.SetText("Goal launched !");
             UpdateGoalLaunched();
             break;
 
             case GameState.WaitForP1:
-            currentStateText.SetText("Wait for P1");
+            currentStateText.SetText("P1 : Your turn");
             UpdateWaitForP1();
             break;
 
@@ -217,7 +236,7 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.WaitForP2:
-            currentStateText.SetText("Wait for P2");
+            currentStateText.SetText("P2 : Your turn");
             UpdateWaitForP2();
             break;
 
@@ -235,19 +254,84 @@ public class StateMachine : MonoBehaviour
         
     }
 
+
+    public void CreateGoal()
+    {
+        if (goal == null)
+        {
+            goal = Instantiate(goalPrefab, stockArea.position, transform.rotation);
+        }
+        SpawnGoal();
+    }
+
+
+    private void SpawnGoal()
+    {
+        if(goal.GetComponent<Rigidbody>().position != spawnArea.position)
+        {
+            goal.GetComponent<Rigidbody>().position = spawnArea.position;
+        }
+    }
+
+
+    private void CreateBalls()
+    {
+        for (int i = 0; i < ballPrefabs.Length; i++)
+        {
+            GameObject ball = Instantiate(ballPrefabs[i], stockArea.position, Quaternion.identity);
+            balls.Add(ball);
+        }
+    }
+
     private void SpawnBall(int playerNumber)
     {
-        int index  = playerNumber - 1;
+        // int index  = playerNumber - 1;
 
-        currentBall = Instantiate(ballPrefabs[index], instantiateArea.position, transform.rotation);
+        // currentBall = Instantiate(ballPrefabs[index], stockArea.position, transform.rotation);
 
-        if(currentBall.GetComponent<Rigidbody>().position != spawnArea.position)
+        // if(currentBall.GetComponent<Rigidbody>().position != spawnArea.position)
+        // {
+        //     currentBall.GetComponent<Rigidbody>().position = spawnArea.position;
+        // }
+
+        // numberOfShoots[index] -= 1;
+        
+        int index = playerNumber - 1;
+
+        if (index >= 0 && index < balls.Count)
         {
-            currentBall.GetComponent<Rigidbody>().position = spawnArea.position;
+            currentBall = balls[index];
+
+            if (currentBall.GetComponent<Rigidbody>().position != spawnArea.position)
+            {
+                currentBall.GetComponent<Rigidbody>().position = spawnArea.position;
+            }
+
+            numberOfShoots[index] -= 1;
+        }
+    }
+
+    private void RemoveAllBalls()
+    {
+        if (goal != null && goal.GetComponent<Rigidbody>().position != spawnArea.position)
+        {
+            goal.GetComponent<Rigidbody>().position = spawnArea.position;
         }
 
-        numberOfShoots[index] -= 1;
+        // Trouvez toutes les balles présentes dans la scène
+        GameObject[] allBalls = GameObject.FindGameObjectsWithTag("Ball");
+
+        // Parcourez toutes les balles et déplacez-les vers la zone de stockage
+        foreach (GameObject ball in allBalls)
+        {
+        if (ball != null && ball.GetComponent<Rigidbody>() != null)
+            {
+                ball.GetComponent<Rigidbody>().position = stockArea.position;
+            }
+        }
     }
+
+
 
 
     private bool PlayerStillHaveShoot(int playerNumber){

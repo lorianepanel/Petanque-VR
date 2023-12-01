@@ -27,18 +27,12 @@ public class ScoreManager : MonoBehaviour
             return _goal;}
     }
 
-    private int scoreP1 = 0;
-    private int scoreP2 = 0;
-    private int onePoint = 1;
+    public int scoreP1 = 0;
+    public int scoreP2 = 0;
+    public int point = 1;
 
-    // void Start(){
-    //     scoreP1 = 0;
-    //     scoreP2 = 0;
-    // }
+    public int winningScore = 10;
 
-    void Update(){
-
-    }
 
     public void UpdateCheckTheDistance()
     {
@@ -48,23 +42,6 @@ public class ScoreManager : MonoBehaviour
         float distance = CheckTheDistance(out currentPlayerNumber);
         distanceText.SetText($"Closest player : {currentPlayerNumber} <br>Distance from goal : {distance:f}m");   
     }
-
-    public void CalculateScores()
-    {
-
-        BallBehaviour.PlayerNumber winner;
-        CheckTheDistance(out winner);
-        Debug.Log($"1 point for {winner}");
-        if (winner == BallBehaviour.PlayerNumber.P1){
-            scoreP1 += onePoint;
-            scoreP1Text.SetText($"P1 : {scoreP1} points");
-        }
-        else if (winner == BallBehaviour.PlayerNumber.P2){
-            scoreP2 += onePoint;
-            scoreP2Text.SetText($"P2 : {scoreP2} points");
-        }
-    }
-
 
 
 
@@ -89,14 +66,11 @@ public class ScoreManager : MonoBehaviour
         return smallestDistanceFromGoal;
     }
 
-    
-
     public int GetTheLooser(){
 
         BallBehaviour.PlayerNumber playerNumber = BallBehaviour.PlayerNumber.None;
         CheckTheDistance(out playerNumber);  
-        Debug.Log($"Ball la plus près : {playerNumber}"); 
-
+        // Debug.Log($"Ball la plus près : {playerNumber}"); 
 
         int nPlayer = 0;
         bool ok = false;
@@ -114,5 +88,25 @@ public class ScoreManager : MonoBehaviour
         if(nPlayer == 1) return 2;
         return 1;
     }
+
+    public void CalculateScores()
+    {
+        BallBehaviour.PlayerNumber winner;
+        CheckTheDistance(out winner);
+        Debug.Log($"1 point for {winner}");
+        if (winner == BallBehaviour.PlayerNumber.P1){
+            scoreP1 += point;
+            scoreP1Text.SetText($"P1 : {scoreP1} points");
+        }
+        else if (winner == BallBehaviour.PlayerNumber.P2){
+            scoreP2 += point;
+            scoreP2Text.SetText($"P2 : {scoreP2} points");
+        }
+    }
+
+    // public void CheckTheScores()
+    // {
+
+    // }
 
 }
