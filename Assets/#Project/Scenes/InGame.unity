@@ -1167,7 +1167,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 409651770}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: b7cb65f9a85aa0c4baf6cde6882d0f95, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -4427,10 +4427,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc963381ac6aae04db513a16f096f3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentGoal: {fileID: 0}
+  goal: {fileID: 0}
   goalPrefab: {fileID: 3724105026472045441, guid: 2ee691e51da832847aa429aedf3bd38f,
     type: 3}
-  currentBall: {fileID: 0}
+  playingBall: {fileID: 0}
   ballPrefabs:
   - {fileID: 96623856952081888, guid: 087b23efb3582cc418602bc15aeba957, type: 3}
   - {fileID: 8276137767622365270, guid: fb1e80414957d3843ae7b903bed790d1, type: 3}

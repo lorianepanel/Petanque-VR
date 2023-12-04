@@ -31,7 +31,7 @@ public class ScoreManager : MonoBehaviour
     public int scoreP2 = 0;
     public int point = 1;
 
-    public int winningScore = 10;
+    public int winningScore = 5;
 
 
     public void UpdateCheckTheDistance()
@@ -104,9 +104,5 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    // public void CheckTheScores()
-    // {
-
-    // }
 
 }
