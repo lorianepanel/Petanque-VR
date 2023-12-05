@@ -31,7 +31,7 @@ public class ScoreManager : MonoBehaviour
     public int scoreP2 = 0;
     public int point = 1;
 
-    public int winningScore = 5;
+    public int winningScore = 3;
 
 
     public void UpdateCheckTheDistance()
@@ -46,21 +46,48 @@ public class ScoreManager : MonoBehaviour
 
 
     // methode qui check la distance entre toutes les boules et le goal, out la couleur de la ball la plus près, return la plus petite distance
+    // public float CheckTheDistance(out BallBehaviour.PlayerNumber playerNumber)
+    // {
+
+    //     playerNumber = BallBehaviour.PlayerNumber.None;
+    //     smallestDistanceFromGoal = Mathf.Infinity;
+
+    //     foreach (GameObject ball in balls)
+    //     {
+    //         float distanceBetweenGoalAndBall = Vector3.Distance(ball.transform.position, goal.position);
+            
+            
+    //         if(distanceBetweenGoalAndBall < smallestDistanceFromGoal)
+    //         {
+    //             smallestDistanceFromGoal = distanceBetweenGoalAndBall;
+    //             playerNumber = ball.GetComponent<BallBehaviour>().playerNumber;              
+    //         }
+    //     }
+    //     return smallestDistanceFromGoal;
+    // }
+
     public float CheckTheDistance(out BallBehaviour.PlayerNumber playerNumber)
     {
-
         playerNumber = BallBehaviour.PlayerNumber.None;
         smallestDistanceFromGoal = Mathf.Infinity;
 
-        foreach (GameObject ball in balls)
+        foreach (GameObject ballObject in balls)
         {
-            float distanceBetweenGoalAndBall = Vector3.Distance(ball.transform.position, goal.position);
-            
-            
-            if(distanceBetweenGoalAndBall < smallestDistanceFromGoal)
+            // Assurez-vous que la référence à la balle n'est pas nulle
+            if (ballObject != null)
             {
-                smallestDistanceFromGoal = distanceBetweenGoalAndBall;
-                playerNumber = ball.GetComponent<BallBehaviour>().playerNumber;              
+                // Assurez-vous que la balle est toujours valide avant d'accéder à ses composants
+                BallBehaviour ball = ballObject.GetComponent<BallBehaviour>();
+                if (ball != null)
+                {
+                    float distanceBetweenGoalAndBall = Vector3.Distance(ball.transform.position, goal.position);
+
+                    if (distanceBetweenGoalAndBall < smallestDistanceFromGoal)
+                    {
+                        smallestDistanceFromGoal = distanceBetweenGoalAndBall;
+                        playerNumber = ball.playerNumber;
+                    }
+                }
             }
         }
         return smallestDistanceFromGoal;

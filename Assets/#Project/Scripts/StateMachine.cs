@@ -11,24 +11,8 @@ using UnityEngine.SceneManagement;
 
 public class StateMachine : MonoBehaviour
 {
-    [HideInInspector] public GameObject goal;
-
-    public GameObject goalPrefab;
-
-    public GameObject playingBall;
-
-    public GameObject[] ballPrefabs;
-
-
-    public int[] numberOfShoots = new int[2] {3,3};
-    
 
     public UnityEvent whenStateChanged;
-
-    [SerializeField] Transform stockArea;
-
-    [SerializeField] Transform spawnArea;
-
 
     public enum GameState{
         WaitForGoal,
@@ -50,24 +34,29 @@ public class StateMachine : MonoBehaviour
 
     private ScoreManager scoreManager;
 
+    private BallsManager ballsManager;
 
+    private bool isRoundRestarting = false;
     
 
-    // Start is called before the first frame update
     void Start()
     {
 
-        if(terrainInfo == null){
-            terrainInfo = FindObjectOfType<TerrainInfo>();
+        ballsManager = FindObjectOfType<BallsManager>();
+        terrainInfo = FindObjectOfType<TerrainInfo>();
+        scoreManager = FindObjectOfType<ScoreManager>();
+
+        if (ballsManager == null || terrainInfo == null || scoreManager == null)
+        {
+            Debug.LogError("One or more managers are not assigned!");
         }
-
-        if(scoreManager == null){
-            scoreManager = FindObjectOfType<ScoreManager>();
+        else
+        {
+            state = GameState.WaitForGoal;
+            previousState = state;
+            ballsManager.CreateGoal();
+            ballsManager.CreateBall(1);
         }
-
-        state = GameState.WaitForGoal;
-        previousState = state;
-
     }
 
 
@@ -80,34 +69,25 @@ public class StateMachine : MonoBehaviour
 
     private void UpdateWaitForGoal()
     {
-        if (goal == null){
-            SpawnGoal();
-        }
-
-
-        if(terrainInfo.IsIn(goal)){
-            // si goal est sur le terrain : état suivant
+        if(terrainInfo.IsIn(ballsManager.playingGoal)){
             state = GameState.GoalLaunched;
         }
     }
 
     private void UpdateGoalLaunched()
     {
-        if(terrainInfo.IsStable(goal))
+        if(terrainInfo.IsStable(ballsManager.playingGoal))
         {
-            // si goal est stable : état suivant et ballP1 apparait
             state = GameState.WaitForP1;
-            
-            SpawnBall(1);      
         }
+
     }
 
     private void UpdateWaitForP1()
     {
-        if(terrainInfo.IsIn(playingBall) && terrainInfo.IsStable(playingBall))
+
+        if(terrainInfo.IsIn(ballsManager.playingBall) && terrainInfo.IsStable(ballsManager.playingBall))
         {
-            // si BallP1 est sur le terrain et stable : état suivant
-            // Debug.Log($"Is in : {terrainInfo.IsIn(currentBall)}, Is stable : {terrainInfo.IsStable(currentBall)}.");
             scoreManager.UpdateCheckTheDistance();
             state = GameState.P1HasPlayed;
         }
@@ -115,13 +95,11 @@ public class StateMachine : MonoBehaviour
 
     private void UpdateP1HasPlayed()
     {
-        
-        // Debug.Log($"Player1 still have shoot: {PlayerStillHaveShoot(1)}");
-        // Debug.Log($"Player2 still have shoot: {PlayerStillHaveShoot(2)}");
-        Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
+
+        // Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
 
         //condition a : si P1 et P2 n'ont plus de balles : état RoundFinished
-        if (!PlayerStillHaveShoot(1) && !PlayerStillHaveShoot(2))
+        if (!ballsManager.PlayerStillHaveShoot(1) && !ballsManager.PlayerStillHaveShoot(2))
         {
             scoreManager.UpdateCheckTheDistance();
             scoreManager.CalculateScores();
@@ -129,27 +107,28 @@ public class StateMachine : MonoBehaviour
         }
 
         // condition b : si P1 a encore des balles et si P1 est perdant ou si P2 n'a plus de balles => P1 rejoue
-        else if(PlayerStillHaveShoot(1) && (scoreManager.GetTheLooser() == 1 || !PlayerStillHaveShoot(2)))
+        else if(ballsManager.PlayerStillHaveShoot(1) && (scoreManager.GetTheLooser() == 1 || !ballsManager.PlayerStillHaveShoot(2)))
         {
             // Debug.Log($"P1 TURN");
             state = GameState.WaitForP1;
-            SpawnBall(1);
+            ballsManager.CreateBall(1);
+            
         }
         
         // condition c : si P2 a encore des balles et si P2 est perdant ou qi P1 n'a plus de balles => au tour de P2
-        else if(PlayerStillHaveShoot(2) && (scoreManager.GetTheLooser() == 2 || !PlayerStillHaveShoot(1))){
+        else if(ballsManager.PlayerStillHaveShoot(2) && (scoreManager.GetTheLooser() == 2 || !ballsManager.PlayerStillHaveShoot(1))){
             // Debug.Log($"P2 TURN");
             state = GameState.WaitForP2;
-            SpawnBall(2);
+            ballsManager.CreateBall(2);
         }
     }
 
     private void UpdateWaitForP2()
     {
-        if(terrainInfo.IsIn(playingBall) && terrainInfo.IsStable(playingBall))
+        
+        if(terrainInfo.IsIn(ballsManager.playingBall) && terrainInfo.IsStable(ballsManager.playingBall))
         {
             scoreManager.UpdateCheckTheDistance();
-            // si BallP2 est sur le terrain et stable : état suivant
             state = GameState.P2HasPlayed;
         }
         else return;
@@ -161,14 +140,14 @@ public class StateMachine : MonoBehaviour
         // Debug.Log($"Player2 still have shoot: {PlayerStillHaveShoot(2)}");
         Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
 
-        if (!terrainInfo.IsIn(playingBall) || !terrainInfo.IsStable(playingBall))
+        if (!terrainInfo.IsIn(ballsManager.playingBall) || !terrainInfo.IsStable(ballsManager.playingBall))
         {
             // Debug.Log($"Is in : {terrainInfo.IsIn(currentBall)}, Is stable : {terrainInfo.IsStable(currentBall)}.");
             return;
         }
 
         //condition a' : si P1 et P2 n'ont plus de balles : état RoundFinished
-        else if (!PlayerStillHaveShoot(1) && !PlayerStillHaveShoot(2))
+        else if (!ballsManager.PlayerStillHaveShoot(1) && !ballsManager.PlayerStillHaveShoot(2))
         {
             scoreManager.UpdateCheckTheDistance();
             scoreManager.CalculateScores();
@@ -176,33 +155,79 @@ public class StateMachine : MonoBehaviour
         }
 
         // condition b' : si P2 a encore des balles et si P2 est perdant ou si P1 n'a plus de balles => P2 rejoue
-        else if(PlayerStillHaveShoot(2) && (scoreManager.GetTheLooser() == 2 || !PlayerStillHaveShoot(1)))
+        else if(ballsManager.PlayerStillHaveShoot(2) && (scoreManager.GetTheLooser() == 2 || !ballsManager.PlayerStillHaveShoot(1)))
         {
             state = GameState.WaitForP2;
-            SpawnBall(2);
+            ballsManager.CreateBall(2);
         }
         
         // condition c' : si P1 a encore des balles et si P1 est perdant ou si P2 n'a plus de balles => au tour de P1
-        else if(PlayerStillHaveShoot(1) && (scoreManager.GetTheLooser() == 1 || !PlayerStillHaveShoot(2))){
+        else if(ballsManager.PlayerStillHaveShoot(1) && (scoreManager.GetTheLooser() == 1 || !ballsManager.PlayerStillHaveShoot(2))){
             state = GameState.WaitForP1;
-            SpawnBall(1);
+            ballsManager.CreateBall(1);
         }
     }
+
+    // private void UpdateRoundFinished()
+    // {
+    //     Debug.Log("Update Round finished");
+
+    //     if(scoreManager.scoreP1 == scoreManager.winningScore || scoreManager.scoreP2 == scoreManager.winningScore)
+    //     {
+    //         Debug.Log("Scene des scores démarre");
+    //     }
+    //     else if (scoreManager.scoreP1 < scoreManager.winningScore || scoreManager.scoreP2 < scoreManager.winningScore)
+    //     {
+    //         Debug.Log("Resetting round...");
+    //         ballsManager.RemoveAllBalls();
+    //         state = GameState.WaitForGoal;
+    //         ballsManager.ResetRound();
+    //     }
+    // }
 
     private void UpdateRoundFinished()
     {
         Debug.Log("Update Round finished");
 
-        RemoveAllBalls();
-
-
         if(scoreManager.scoreP1 == scoreManager.winningScore || scoreManager.scoreP2 == scoreManager.winningScore)
         {
             Debug.Log("Scene des scores démarre");
         }
-        else RestartTheGame();
+        else if (scoreManager.scoreP1 < scoreManager.winningScore || scoreManager.scoreP2 < scoreManager.winningScore)
+        {
+            Debug.Log("Resetting round...");
+
+            
+            
+            
+
+            // Vérifier si le round est déjà en train de se réinitialiser
+            if (!isRoundRestarting)
+            {
+                // Démarrer la Coroutine pour gérer le délai avant de réinitialiser le round
+                StartCoroutine(RestartRoundCoroutine());
+            }
+
+            // ballsManager.RemoveAllBalls();
+            state = GameState.WaitForGoal;
+        }
     }
 
+    private IEnumerator RestartRoundCoroutine()
+    {
+        // Indiquer que le round est en cours de réinitialisation
+        isRoundRestarting = true;
+
+        // Attendre pendant un certain délai (par exemple, 3 secondes)
+        float delay = 3f;
+        yield return new WaitForSeconds(delay);
+
+        // Réinitialiser le round
+        ballsManager.ResetRound();
+
+        // Réinitialiser l'indicateur
+        isRoundRestarting = false;
+    }
 
 
     public void UpdateState()
@@ -253,64 +278,5 @@ public class StateMachine : MonoBehaviour
     }
 
 
-
-
-    private void SpawnGoal()
-    {
-        goal = Instantiate(goalPrefab, stockArea.position, transform.rotation);
-
-        if(goal.GetComponent<Rigidbody>().position != spawnArea.position)
-        {
-            goal.GetComponent<Rigidbody>().position = spawnArea.position;
-        }
-    }
-
-
-
-    private void SpawnBall(int playerNumber)
-    {
-        int index  = playerNumber - 1;
-
-        playingBall = Instantiate(ballPrefabs[index], stockArea.position, transform.rotation);
-
-        if(playingBall.GetComponent<Rigidbody>().position != spawnArea.position)
-        {
-            playingBall.GetComponent<Rigidbody>().position = spawnArea.position;
-        }
-
-        numberOfShoots[index] -= 1;
-        
-    }
-
-    private void RemoveAllBalls()
-    {
-        if (goal != null && goal.GetComponent<Rigidbody>().position != spawnArea.position)
-        {
-            Destroy(goal);
-        }
-
-
-        GameObject[] allBalls = GameObject.FindGameObjectsWithTag("Ball");
-
-        foreach (GameObject ball in allBalls)
-        {
-        if (ball != null && ball.GetComponent<Rigidbody>() != null)
-            {
-                Destroy(ball);
-            }
-        }
-
-    }
-
-    private void RestartTheGame(){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-
-
-    private bool PlayerStillHaveShoot(int playerNumber){
-        int index  = playerNumber - 1;
-        return numberOfShoots[index]> 0;
-    }
 
 }
