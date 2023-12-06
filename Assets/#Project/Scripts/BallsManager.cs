@@ -15,8 +15,8 @@ public class BallsManager : MonoBehaviour
 
     public int[] numberOfShoots = new int[2] { 2, 2 };
 
-    public Rigidbody playingGoalRigidbody;
-    public Rigidbody playingBallRigidbody;
+    public Rigidbody playingGoalRb;
+    public Rigidbody playingBallRb;
 
 
 
@@ -30,12 +30,12 @@ public class BallsManager : MonoBehaviour
         playingGoal = newGoal;
         
         // Récupérer le Rigidbody du goal actif
-        playingGoalRigidbody = playingGoal.GetComponent<Rigidbody>();
+        playingGoalRb = playingGoal.GetComponent<Rigidbody>();
 
         // Positionner le goal actif à la zone de spawn si nécessaire
-        if (playingGoalRigidbody.position != spawnArea.position)
+        if (playingGoalRb.transform.position != spawnArea.position)
         {
-            playingGoalRigidbody.position = spawnArea.position;
+            playingGoalRb.transform.position = spawnArea.position;
         }
     }
 
@@ -52,12 +52,12 @@ public class BallsManager : MonoBehaviour
         playingBall = newBall;
 
         // Récupérer le Rigidbody de la balle actuelle
-        playingBallRigidbody = playingBall.GetComponent<Rigidbody>();
+        playingBallRb = playingBall.GetComponent<Rigidbody>();
 
         // Positionner la balle actuelle à la zone de spawn si nécessaire
-        if (playingBallRigidbody.position != spawnArea.position)
+        if (playingBallRb.transform.position != spawnArea.position)
         {
-            playingBallRigidbody.position = spawnArea.position;
+            playingBallRb.transform.position = spawnArea.position;
         }
 
         // Décrémenter le nombre de tirs disponibles
@@ -76,20 +76,18 @@ public class BallsManager : MonoBehaviour
         foreach (GameObject ball in allBalls)
         {
             Destroy(ball);
-            Debug.Log("destroying balls");
         }
+        Debug.Log("destroying all balls");
     }
 
     public void ResetRound()
     {
+        Debug.Log("Resetting round...");
+
         // Réinitialiser le nombre de tirs
         numberOfShoots = new int[2] { 2, 2 };
-        Debug.LogWarning("Number of shoots restored");
+        Debug.Log("Number of shoots restored");
 
-        RemoveAllBalls();
-
-
-        Debug.Log("Resetting round...");
         // Créer un nouveau goal
         CreateGoal();
 

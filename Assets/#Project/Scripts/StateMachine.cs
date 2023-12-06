@@ -168,66 +168,74 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    // private void UpdateRoundFinished()
-    // {
-    //     Debug.Log("Update Round finished");
-
-    //     if(scoreManager.scoreP1 == scoreManager.winningScore || scoreManager.scoreP2 == scoreManager.winningScore)
-    //     {
-    //         Debug.Log("Scene des scores démarre");
-    //     }
-    //     else if (scoreManager.scoreP1 < scoreManager.winningScore || scoreManager.scoreP2 < scoreManager.winningScore)
-    //     {
-    //         Debug.Log("Resetting round...");
-    //         ballsManager.RemoveAllBalls();
-    //         state = GameState.WaitForGoal;
-    //         ballsManager.ResetRound();
-    //     }
-    // }
 
     private void UpdateRoundFinished()
     {
         Debug.Log("Update Round finished");
+        // currentStateText.SetText("Round finished");
 
-        if(scoreManager.scoreP1 == scoreManager.winningScore || scoreManager.scoreP2 == scoreManager.winningScore)
+        if (scoreManager.scoreP1 == scoreManager.winningScore || scoreManager.scoreP2 == scoreManager.winningScore)
         {
             Debug.Log("Scene des scores démarre");
+
+            currentStateText.SetText("Game done !");
+
+            StartCoroutine(LoadScoresScene());
         }
         else if (scoreManager.scoreP1 < scoreManager.winningScore || scoreManager.scoreP2 < scoreManager.winningScore)
         {
-            Debug.Log("Resetting round...");
-
-            
-            
-            
-
             // Vérifier si le round est déjà en train de se réinitialiser
             if (!isRoundRestarting)
             {
-                // Démarrer la Coroutine pour gérer le délai avant de réinitialiser le round
-                StartCoroutine(RestartRoundCoroutine());
+                // Démarrer la Coroutine pour gérer le délai avant la suppression des balles et la réinitialisation du round
+                StartCoroutine(WaitAndRemoveCoroutine());
             }
-
-            // ballsManager.RemoveAllBalls();
-            state = GameState.WaitForGoal;
+            // Ne changez pas l'état ici, mais le laissez être géré dans la coroutine
         }
     }
 
-    private IEnumerator RestartRoundCoroutine()
+    private IEnumerator LoadScoresScene()
     {
-        // Indiquer que le round est en cours de réinitialisation
+        yield return new WaitForSeconds(5f);
+        
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("ScoresScene");
+
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+
+    private IEnumerator WaitAndRemoveCoroutine()
+    {
         isRoundRestarting = true;
 
-        // Attendre pendant un certain délai (par exemple, 3 secondes)
-        float delay = 3f;
-        yield return new WaitForSeconds(delay);
+        float totalDelay = 10f;
 
-        // Réinitialiser le round
+        // Mettre à jour le texte pendant le délai
+        while (totalDelay > 0f)
+        {
+            // Mettre à jour le texte avec le décompte
+            currentStateText.SetText($"Next round in : {Mathf.CeilToInt(totalDelay)}");
+
+            // Attendre un petit moment (par exemple, 1 seconde) avant la prochaine mise à jour
+            yield return new WaitForSeconds(1f);
+
+            // Réduire le temps restant
+            totalDelay -= 1f;
+        }
+
+        ballsManager.RemoveAllBalls();
         ballsManager.ResetRound();
 
-        // Réinitialiser l'indicateur
         isRoundRestarting = false;
+
+        // Changer l'état après la réinitialisation du round
+        state = GameState.WaitForGoal;
     }
+
+
 
 
     public void UpdateState()
@@ -269,7 +277,7 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.RoundFinished:
-            currentStateText.SetText("Round finished");
+            // currentStateText.SetText("Round finished");
             UpdateRoundFinished();
             break;
         }

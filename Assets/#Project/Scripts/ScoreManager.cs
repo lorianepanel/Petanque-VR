@@ -31,7 +31,7 @@ public class ScoreManager : MonoBehaviour
     public int scoreP2 = 0;
     public int point = 1;
 
-    public int winningScore = 3;
+    public int winningScore = 2;
 
 
     public void UpdateCheckTheDistance()
@@ -42,7 +42,6 @@ public class ScoreManager : MonoBehaviour
         float distance = CheckTheDistance(out currentPlayerNumber);
         distanceText.SetText($"Closest player : {currentPlayerNumber} <br>Distance from goal : {distance:f}m");   
     }
-
 
 
     // methode qui check la distance entre toutes les boules et le goal, out la couleur de la ball la plus près, return la plus petite distance
