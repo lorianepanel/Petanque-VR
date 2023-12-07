@@ -211,13 +211,13 @@ public class StateMachine : MonoBehaviour
     {
         isRoundRestarting = true;
 
-        float totalDelay = 10f;
+        float totalDelay = 5f;
 
         // Mettre à jour le texte pendant le délai
         while (totalDelay > 0f)
         {
             // Mettre à jour le texte avec le décompte
-            currentStateText.SetText($"Next round in : {Mathf.CeilToInt(totalDelay)}");
+            currentStateText.SetText($"Next round in {Mathf.CeilToInt(totalDelay)} s");
 
             // Attendre un petit moment (par exemple, 1 seconde) avant la prochaine mise à jour
             yield return new WaitForSeconds(1f);
@@ -247,12 +247,12 @@ public class StateMachine : MonoBehaviour
         switch (state)
         {
             case GameState.WaitForGoal:
-            currentStateText.SetText("P1 : Throw the goal");
+            currentStateText.SetText("P1 throw the goal !");
             UpdateWaitForGoal();
             break;
 
             case GameState.GoalLaunched:
-            currentStateText.SetText("Goal launched !");
+            // currentStateText.SetText("Goal launched !");
             UpdateGoalLaunched();
             break;
 
@@ -262,7 +262,7 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.P1HasPlayed:
-            currentStateText.SetText("P1 has played");
+            // currentStateText.SetText("P1 has played");
             UpdateP1HasPlayed();
             break;
 
@@ -272,7 +272,7 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.P2HasPlayed:
-            currentStateText.SetText("P2 has played");
+            // currentStateText.SetText("P2 has played");
             UpdateP2HasPlayed();
             break;
 

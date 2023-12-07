@@ -40,7 +40,7 @@ public class ScoreManager : MonoBehaviour
 
         BallBehaviour.PlayerNumber currentPlayerNumber;
         float distance = CheckTheDistance(out currentPlayerNumber);
-        distanceText.SetText($"Closest player : {currentPlayerNumber} <br>Distance from goal : {distance:f}m");   
+        distanceText.SetText($"{currentPlayerNumber} is winning <br> {distance:f}m");   
     }
 
 
@@ -122,11 +122,11 @@ public class ScoreManager : MonoBehaviour
         Debug.Log($"1 point for {winner}");
         if (winner == BallBehaviour.PlayerNumber.P1){
             scoreP1 += point;
-            scoreP1Text.SetText($"P1 : {scoreP1} points");
+            scoreP1Text.SetText($"P1 <br> {scoreP1}");
         }
         else if (winner == BallBehaviour.PlayerNumber.P2){
             scoreP2 += point;
-            scoreP2Text.SetText($"P2 : {scoreP2} points");
+            scoreP2Text.SetText($"P2 <br> {scoreP2}");
         }
     }
 
