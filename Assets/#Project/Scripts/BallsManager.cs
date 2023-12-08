@@ -18,6 +18,12 @@ public class BallsManager : MonoBehaviour
     public Rigidbody playingGoalRb;
     public Rigidbody playingBallRb;
 
+    private bool isAIPlaying = false;
+
+    public bool IsAIPlaying()
+    {
+        return isAIPlaying;
+    }
 
 
     public void CreateGoal()
@@ -100,4 +106,34 @@ public class BallsManager : MonoBehaviour
         int index = playerNumber - 1;
         return numberOfShoots[index] > 0;
     }
+
+
+    public void PlayForP2WithDelay(float delay)
+    {
+        if (!isAIPlaying)
+        {
+            StartCoroutine(PlayForP2Coroutine(delay));
+        }
+    }
+
+    private IEnumerator PlayForP2Coroutine(float delay)
+    {
+        isAIPlaying = true;
+
+        yield return new WaitForSeconds(delay);
+
+        Debug.Log("AI playing");
+
+        // Get a random position around the goal
+        Vector3 randomOffset = Random.onUnitSphere * 2f; // You can adjust the magnitude (2f) as needed
+        Vector3 newPosition = playingGoalRb.position + randomOffset;
+
+        // Set the position of the playing ball to the new random position
+        playingBallRb.transform.position = newPosition;
+
+        isAIPlaying = false;
+    }
+
+
+    
 }

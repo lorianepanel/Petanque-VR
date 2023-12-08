@@ -125,13 +125,28 @@ public class StateMachine : MonoBehaviour
 
     private void UpdateWaitForP2()
     {
-        
-        if(terrainInfo.IsIn(ballsManager.playingBall) && terrainInfo.IsStable(ballsManager.playingBall))
-        {
-            scoreManager.UpdateCheckTheDistance();
-            state = GameState.P2HasPlayed;
-        }
-        else return;
+
+            if (!ballsManager.IsAIPlaying())
+            {
+                ballsManager.PlayForP2WithDelay(3.0f);
+            }
+
+            else if (!ballsManager.IsAIPlaying() && terrainInfo.IsIn(ballsManager.playingBall) && terrainInfo.IsStable(ballsManager.playingBall))
+            {
+                scoreManager.UpdateCheckTheDistance();
+                state = GameState.P2HasPlayed;
+            }
+            
+        // // ici code qui lance l'IA
+        // ballsManager.PlayForP2WithDelay(2.0f);
+
+        // if(terrainInfo.IsIn(ballsManager.playingBall) && terrainInfo.IsStable(ballsManager.playingBall))
+        // {
+        //     scoreManager.UpdateCheckTheDistance();
+        //     state = GameState.P2HasPlayed;
+        // }
+        // else return;
+
     }
 
     private void UpdateP2HasPlayed()
