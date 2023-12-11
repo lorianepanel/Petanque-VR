@@ -33,7 +33,6 @@ public class TerrainInfo : MonoBehaviour
             // Debug.Log($"{collider.name} is in {nameof(scoreManager.balls)}");
         }
         
-
         grab = collider.GetComponent<XRGrabInteractable>();
         grab.enabled = false; 
     }

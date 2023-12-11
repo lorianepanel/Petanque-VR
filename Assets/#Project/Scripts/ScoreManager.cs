@@ -45,26 +45,6 @@ public class ScoreManager : MonoBehaviour
 
 
     // methode qui check la distance entre toutes les boules et le goal, out la couleur de la ball la plus près, return la plus petite distance
-    // public float CheckTheDistance(out BallBehaviour.PlayerNumber playerNumber)
-    // {
-
-    //     playerNumber = BallBehaviour.PlayerNumber.None;
-    //     smallestDistanceFromGoal = Mathf.Infinity;
-
-    //     foreach (GameObject ball in balls)
-    //     {
-    //         float distanceBetweenGoalAndBall = Vector3.Distance(ball.transform.position, goal.position);
-            
-            
-    //         if(distanceBetweenGoalAndBall < smallestDistanceFromGoal)
-    //         {
-    //             smallestDistanceFromGoal = distanceBetweenGoalAndBall;
-    //             playerNumber = ball.GetComponent<BallBehaviour>().playerNumber;              
-    //         }
-    //     }
-    //     return smallestDistanceFromGoal;
-    // }
-
     public float CheckTheDistance(out BallBehaviour.PlayerNumber playerNumber)
     {
         playerNumber = BallBehaviour.PlayerNumber.None;
@@ -119,7 +99,7 @@ public class ScoreManager : MonoBehaviour
     {
         BallBehaviour.PlayerNumber winner;
         CheckTheDistance(out winner);
-        Debug.Log($"1 point for {winner}");
+        // Debug.Log($"1 point for {winner}");
         if (winner == BallBehaviour.PlayerNumber.P1){
             scoreP1 += point;
             scoreP1Text.SetText($"P1 <br> {scoreP1}");

@@ -118,42 +118,32 @@ public class StateMachine : MonoBehaviour
         // condition c : si P2 a encore des balles et si P2 est perdant ou qi P1 n'a plus de balles => au tour de P2
         else if(ballsManager.PlayerStillHaveShoot(2) && (scoreManager.GetTheLooser() == 2 || !ballsManager.PlayerStillHaveShoot(1))){
             // Debug.Log($"P2 TURN");
-            state = GameState.WaitForP2;
             ballsManager.CreateBall(2);
+
+            if (!ballsManager.IsAIPlaying())
+            {
+                ballsManager.AIPlay(5f);
+            }
+            state = GameState.WaitForP2;
+
         }
     }
 
     private void UpdateWaitForP2()
     {
-
-            if (!ballsManager.IsAIPlaying())
-            {
-                ballsManager.PlayForP2WithDelay(3.0f);
-            }
-
-            else if (!ballsManager.IsAIPlaying() && terrainInfo.IsIn(ballsManager.playingBall) && terrainInfo.IsStable(ballsManager.playingBall))
-            {
-                scoreManager.UpdateCheckTheDistance();
-                state = GameState.P2HasPlayed;
-            }
+        if (terrainInfo.IsIn(ballsManager.playingBall) && terrainInfo.IsStable(ballsManager.playingBall))
+        {
+            scoreManager.UpdateCheckTheDistance();
+            state = GameState.P2HasPlayed;
+        }
             
-        // // ici code qui lance l'IA
-        // ballsManager.PlayForP2WithDelay(2.0f);
-
-        // if(terrainInfo.IsIn(ballsManager.playingBall) && terrainInfo.IsStable(ballsManager.playingBall))
-        // {
-        //     scoreManager.UpdateCheckTheDistance();
-        //     state = GameState.P2HasPlayed;
-        // }
-        // else return;
-
     }
 
     private void UpdateP2HasPlayed()
     {
         // Debug.Log($"Player1 still have shoot: {PlayerStillHaveShoot(1)}");
         // Debug.Log($"Player2 still have shoot: {PlayerStillHaveShoot(2)}");
-        Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
+        // Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
 
         if (!terrainInfo.IsIn(ballsManager.playingBall) || !terrainInfo.IsStable(ballsManager.playingBall))
         {
@@ -172,8 +162,12 @@ public class StateMachine : MonoBehaviour
         // condition b' : si P2 a encore des balles et si P2 est perdant ou si P1 n'a plus de balles => P2 rejoue
         else if(ballsManager.PlayerStillHaveShoot(2) && (scoreManager.GetTheLooser() == 2 || !ballsManager.PlayerStillHaveShoot(1)))
         {
-            state = GameState.WaitForP2;
             ballsManager.CreateBall(2);
+            if (!ballsManager.IsAIPlaying())
+            {
+                ballsManager.AIPlay(5f);
+            }
+            state = GameState.WaitForP2;
         }
         
         // condition c' : si P1 a encore des balles et si P1 est perdant ou si P2 n'a plus de balles => au tour de P1
@@ -186,7 +180,7 @@ public class StateMachine : MonoBehaviour
 
     private void UpdateRoundFinished()
     {
-        Debug.Log("Update Round finished");
+        // Debug.Log("Update Round finished");
         // currentStateText.SetText("Round finished");
 
         if (scoreManager.scoreP1 == scoreManager.winningScore || scoreManager.scoreP2 == scoreManager.winningScore)
@@ -249,6 +243,7 @@ public class StateMachine : MonoBehaviour
         // Changer l'état après la réinitialisation du round
         state = GameState.WaitForGoal;
     }
+    
 
 
 
@@ -282,7 +277,7 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.WaitForP2:
-            currentStateText.SetText("P2 : Your turn");
+            currentStateText.SetText("P2's turn");
             UpdateWaitForP2();
             break;
 
