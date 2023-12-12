@@ -8,6 +8,7 @@ using Unity.XR.CoreUtils;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
+using UnityEngine.Animations;
 
 public class StateMachine : MonoBehaviour
 {
@@ -36,6 +37,8 @@ public class StateMachine : MonoBehaviour
 
     private BallsManager ballsManager;
 
+    private AIBehaviour aIBehaviour;
+
     private bool isRoundRestarting = false;
     
 
@@ -45,8 +48,9 @@ public class StateMachine : MonoBehaviour
         ballsManager = FindObjectOfType<BallsManager>();
         terrainInfo = FindObjectOfType<TerrainInfo>();
         scoreManager = FindObjectOfType<ScoreManager>();
+        aIBehaviour = FindObjectOfType<AIBehaviour>();
 
-        if (ballsManager == null || terrainInfo == null || scoreManager == null)
+        if (ballsManager == null || terrainInfo == null || scoreManager == null || aIBehaviour == null)
         {
             Debug.LogError("One or more managers are not assigned!");
         }
@@ -120,14 +124,12 @@ public class StateMachine : MonoBehaviour
             // Debug.Log($"P2 TURN");
             ballsManager.CreateBall(2);
 
-            if (!ballsManager.IsAIPlaying())
-            {
-                ballsManager.AIPlay(5f);
-            }
+            StartCoroutine(AICoroutine());
             state = GameState.WaitForP2;
-
+   
         }
     }
+
 
     private void UpdateWaitForP2()
     {
@@ -163,10 +165,8 @@ public class StateMachine : MonoBehaviour
         else if(ballsManager.PlayerStillHaveShoot(2) && (scoreManager.GetTheLooser() == 2 || !ballsManager.PlayerStillHaveShoot(1)))
         {
             ballsManager.CreateBall(2);
-            if (!ballsManager.IsAIPlaying())
-            {
-                ballsManager.AIPlay(5f);
-            }
+
+            StartCoroutine(AICoroutine());
             state = GameState.WaitForP2;
         }
         
@@ -246,6 +246,24 @@ public class StateMachine : MonoBehaviour
     
 
 
+    private IEnumerator AICoroutine()
+    {
+        // Attendre un court délai avant que l'IA ne commence à jouer
+        yield return new WaitForSeconds(5f);
+
+        // Appeler la fonction AIPlay de l'AIBehaviour
+        aIBehaviour.AIPlay();
+
+        // Attendre que l'IA ait terminé de jouer
+        while (aIBehaviour.IsAIPlaying())
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(5f);
+
+    }
+
 
 
     public void UpdateState()
@@ -277,12 +295,12 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.WaitForP2:
-            currentStateText.SetText("P2's turn");
+            currentStateText.SetText("AI's turn");
             UpdateWaitForP2();
             break;
 
             case GameState.P2HasPlayed:
-            // currentStateText.SetText("P2 has played");
+            currentStateText.SetText("AI's turn");
             UpdateP2HasPlayed();
             break;
 
