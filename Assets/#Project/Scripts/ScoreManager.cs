@@ -29,9 +29,10 @@ public class ScoreManager : MonoBehaviour
 
     public int scoreP1 = 0;
     public int scoreP2 = 0;
+
     public int point = 1;
 
-    public int winningScore = 2;
+    public int winningScore = 3;
 
 
     public void UpdateCheckTheDistance()
@@ -40,7 +41,7 @@ public class ScoreManager : MonoBehaviour
 
         BallBehaviour.PlayerNumber currentPlayerNumber;
         float distance = CheckTheDistance(out currentPlayerNumber);
-        distanceText.SetText($"{currentPlayerNumber} is winning <br> {distance:f}m");   
+        distanceText.SetText($"{currentPlayerNumber} : <br>{distance:f}m");   
     }
 
 
@@ -76,7 +77,6 @@ public class ScoreManager : MonoBehaviour
 
         BallBehaviour.PlayerNumber playerNumber = BallBehaviour.PlayerNumber.None;
         CheckTheDistance(out playerNumber);  
-        // Debug.Log($"Ball la plus près : {playerNumber}"); 
 
         int nPlayer = 0;
         bool ok = false;
@@ -99,16 +99,23 @@ public class ScoreManager : MonoBehaviour
     {
         BallBehaviour.PlayerNumber winner;
         CheckTheDistance(out winner);
-        // Debug.Log($"1 point for {winner}");
+        
+        int scoreP1Increment = 0;
+        int scoreP2Increment = 0;
+
         if (winner == BallBehaviour.PlayerNumber.P1){
-            scoreP1 += point;
-            scoreP1Text.SetText($"P1 <br> {scoreP1}");
+            scoreP1Increment += 1;
         }
         else if (winner == BallBehaviour.PlayerNumber.P2){
-            scoreP2 += point;
-            scoreP2Text.SetText($"P2 <br> {scoreP2}");
+            scoreP2Increment += 1;
         }
-    }
 
+        // Mettez à jour les scores affichés
+        scoreP1 += scoreP1Increment;
+        scoreP2 += scoreP2Increment;
+
+        scoreP1Text.SetText($"{scoreP1}");
+        scoreP2Text.SetText($"{scoreP2}");
+    }
 
 }

@@ -12,7 +12,6 @@ using UnityEngine.Animations;
 
 public class StateMachine : MonoBehaviour
 {
-
     public UnityEvent whenStateChanged;
 
     public enum GameState{
@@ -30,6 +29,9 @@ public class StateMachine : MonoBehaviour
 
     [SerializeField]
     private TMP_Text currentStateText;
+
+    [SerializeField]
+    private TMP_Text announcementText;
 
     private TerrainInfo terrainInfo;
 
@@ -70,7 +72,6 @@ public class StateMachine : MonoBehaviour
     }
 
 
-
     private void UpdateWaitForGoal()
     {
         if(terrainInfo.IsIn(ballsManager.playingGoal)){
@@ -100,8 +101,6 @@ public class StateMachine : MonoBehaviour
     private void UpdateP1HasPlayed()
     {
 
-        // Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
-
         //condition a : si P1 et P2 n'ont plus de balles : état RoundFinished
         if (!ballsManager.PlayerStillHaveShoot(1) && !ballsManager.PlayerStillHaveShoot(2))
         {
@@ -113,15 +112,12 @@ public class StateMachine : MonoBehaviour
         // condition b : si P1 a encore des balles et si P1 est perdant ou si P2 n'a plus de balles => P1 rejoue
         else if(ballsManager.PlayerStillHaveShoot(1) && (scoreManager.GetTheLooser() == 1 || !ballsManager.PlayerStillHaveShoot(2)))
         {
-            // Debug.Log($"P1 TURN");
             state = GameState.WaitForP1;
             ballsManager.CreateBall(1);
-            
         }
         
         // condition c : si P2 a encore des balles et si P2 est perdant ou qi P1 n'a plus de balles => au tour de P2
         else if(ballsManager.PlayerStillHaveShoot(2) && (scoreManager.GetTheLooser() == 2 || !ballsManager.PlayerStillHaveShoot(1))){
-            // Debug.Log($"P2 TURN");
             ballsManager.CreateBall(2);
 
             StartCoroutine(AICoroutine());
@@ -143,13 +139,9 @@ public class StateMachine : MonoBehaviour
 
     private void UpdateP2HasPlayed()
     {
-        // Debug.Log($"Player1 still have shoot: {PlayerStillHaveShoot(1)}");
-        // Debug.Log($"Player2 still have shoot: {PlayerStillHaveShoot(2)}");
-        // Debug.Log($"The looser is: {scoreManager.GetTheLooser()}");
 
         if (!terrainInfo.IsIn(ballsManager.playingBall) || !terrainInfo.IsStable(ballsManager.playingBall))
         {
-            // Debug.Log($"Is in : {terrainInfo.IsIn(currentBall)}, Is stable : {terrainInfo.IsStable(currentBall)}.");
             return;
         }
 
@@ -180,26 +172,21 @@ public class StateMachine : MonoBehaviour
 
     private void UpdateRoundFinished()
     {
-        // Debug.Log("Update Round finished");
-        // currentStateText.SetText("Round finished");
-
         if (scoreManager.scoreP1 == scoreManager.winningScore || scoreManager.scoreP2 == scoreManager.winningScore)
         {
             Debug.Log("Scene des scores démarre");
 
-            currentStateText.SetText("Game done !");
+            currentStateText.SetText("Game done");
 
             StartCoroutine(LoadScoresScene());
         }
         else if (scoreManager.scoreP1 < scoreManager.winningScore || scoreManager.scoreP2 < scoreManager.winningScore)
         {
-            // Vérifier si le round est déjà en train de se réinitialiser
             if (!isRoundRestarting)
             {
                 // Démarrer la Coroutine pour gérer le délai avant la suppression des balles et la réinitialisation du round
                 StartCoroutine(WaitAndRemoveCoroutine());
             }
-            // Ne changez pas l'état ici, mais le laissez être géré dans la coroutine
         }
     }
 
@@ -220,20 +207,15 @@ public class StateMachine : MonoBehaviour
     {
         isRoundRestarting = true;
 
-        float totalDelay = 5f;
+        float totalDelay = 10f;
 
-        // Mettre à jour le texte pendant le délai
         while (totalDelay > 0f)
         {
-            // Mettre à jour le texte avec le décompte
-            currentStateText.SetText($"Next round in {Mathf.CeilToInt(totalDelay)} s");
-
-            // Attendre un petit moment (par exemple, 1 seconde) avant la prochaine mise à jour
+            announcementText.SetText($"Next round in {Mathf.CeilToInt(totalDelay)}");
             yield return new WaitForSeconds(1f);
-
-            // Réduire le temps restant
             totalDelay -= 1f;
         }
+        announcementText.SetText("");
 
         ballsManager.RemoveAllBalls();
         ballsManager.ResetRound();
@@ -249,7 +231,7 @@ public class StateMachine : MonoBehaviour
     private IEnumerator AICoroutine()
     {
         // Attendre un court délai avant que l'IA ne commence à jouer
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
 
         // Appeler la fonction AIPlay de l'AIBehaviour
         aIBehaviour.AIPlay();
@@ -260,7 +242,7 @@ public class StateMachine : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
 
     }
 
@@ -275,37 +257,44 @@ public class StateMachine : MonoBehaviour
         switch (state)
         {
             case GameState.WaitForGoal:
-            currentStateText.SetText("P1 throw the goal !");
+            currentStateText.SetText("P1 start the round");
+            announcementText.SetText("Throw the goal");
             UpdateWaitForGoal();
             break;
 
             case GameState.GoalLaunched:
-            // currentStateText.SetText("Goal launched !");
+            currentStateText.SetText(" ");
+            announcementText.SetText(" ");
             UpdateGoalLaunched();
             break;
 
             case GameState.WaitForP1:
-            currentStateText.SetText("P1 : Your turn");
+            currentStateText.SetText("P1's turn");
+            announcementText.SetText("Throw the ball");
             UpdateWaitForP1();
             break;
 
             case GameState.P1HasPlayed:
-            // currentStateText.SetText("P1 has played");
+            currentStateText.SetText(" ");
+            announcementText.SetText(" ");
             UpdateP1HasPlayed();
             break;
 
             case GameState.WaitForP2:
-            currentStateText.SetText("AI's turn");
+            currentStateText.SetText("P2's turn");
+            announcementText.SetText("AI is playing");
             UpdateWaitForP2();
             break;
 
             case GameState.P2HasPlayed:
-            currentStateText.SetText("AI's turn");
+            currentStateText.SetText(" ");
+            announcementText.SetText(" ");
             UpdateP2HasPlayed();
             break;
 
             case GameState.RoundFinished:
-            // currentStateText.SetText("Round finished");
+            currentStateText.SetText("Round finished");
+            // announcementText.SetText(" ");
             UpdateRoundFinished();
             break;
         }
