@@ -27,12 +27,13 @@ public class ScoreManager : MonoBehaviour
             return _goal;}
     }
 
+    [HideInInspector]
     public int scoreP1 = 0;
+
+    [HideInInspector]
     public int scoreP2 = 0;
 
-    public int point = 1;
-
-    public int winningScore = 3;
+    public int winningScore = 13;
 
 
     public void UpdateCheckTheDistance()
@@ -41,7 +42,7 @@ public class ScoreManager : MonoBehaviour
 
         BallBehaviour.PlayerNumber currentPlayerNumber;
         float distance = CheckTheDistance(out currentPlayerNumber);
-        distanceText.SetText($"{currentPlayerNumber} : <br>{distance:f}m");   
+        distanceText.SetText($"{currentPlayerNumber} is the closest <br>{distance:f}m");   
     }
 
 

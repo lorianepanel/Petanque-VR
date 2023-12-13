@@ -176,12 +176,19 @@ public class StateMachine : MonoBehaviour
         {
             Debug.Log("Scene des scores démarre");
 
-            currentStateText.SetText("Game done");
+            if (scoreManager.scoreP1 == scoreManager.winningScore)
+            {
+                currentStateText.SetText("Game done <br>You won !");
+            }
+            else currentStateText.SetText("Game done <br>You lost !");
+
+            announcementText.SetText(" ");
 
             StartCoroutine(LoadScoresScene());
         }
         else if (scoreManager.scoreP1 < scoreManager.winningScore || scoreManager.scoreP2 < scoreManager.winningScore)
         {
+            
             if (!isRoundRestarting)
             {
                 // Démarrer la Coroutine pour gérer le délai avant la suppression des balles et la réinitialisation du round
@@ -192,7 +199,7 @@ public class StateMachine : MonoBehaviour
 
     private IEnumerator LoadScoresScene()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(15f);
         
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("ScoresScene");
 
@@ -207,15 +214,26 @@ public class StateMachine : MonoBehaviour
     {
         isRoundRestarting = true;
 
+        if (scoreManager.scoreP1 > scoreManager.scoreP2 || scoreManager.scoreP1 == scoreManager.scoreP2)
+        {
+            currentStateText.SetText("P1 won this round");
+        }
+
+        else if (scoreManager.scoreP2 > scoreManager.scoreP1 || scoreManager.scoreP2 == scoreManager.scoreP1)
+        {
+            currentStateText.SetText("P2 won this round");
+        }
+
         float totalDelay = 10f;
 
         while (totalDelay > 0f)
         {
-            announcementText.SetText($"Next round in {Mathf.CeilToInt(totalDelay)}");
+            announcementText.SetText($"Next round in {Mathf.CeilToInt(totalDelay)}s");
             yield return new WaitForSeconds(1f);
             totalDelay -= 1f;
         }
-        announcementText.SetText("");
+        announcementText.SetText(" ");
+        scoreManager.distanceText.SetText(" ");
 
         ballsManager.RemoveAllBalls();
         ballsManager.ResetRound();
@@ -231,7 +249,7 @@ public class StateMachine : MonoBehaviour
     private IEnumerator AICoroutine()
     {
         // Attendre un court délai avant que l'IA ne commence à jouer
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5f);
 
         // Appeler la fonction AIPlay de l'AIBehaviour
         aIBehaviour.AIPlay();
@@ -242,7 +260,7 @@ public class StateMachine : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5f);
 
     }
 
@@ -257,8 +275,8 @@ public class StateMachine : MonoBehaviour
         switch (state)
         {
             case GameState.WaitForGoal:
-            currentStateText.SetText("P1 start the round");
-            announcementText.SetText("Throw the goal");
+            currentStateText.SetText("Player 1 <br>Start the round");
+            announcementText.SetText("Throw the goal first !");
             UpdateWaitForGoal();
             break;
 
@@ -269,8 +287,8 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.WaitForP1:
-            currentStateText.SetText("P1's turn");
-            announcementText.SetText("Throw the ball");
+            currentStateText.SetText("Player 1 <br>Your turn");
+            announcementText.SetText("Throw the ball !");
             UpdateWaitForP1();
             break;
 
@@ -281,8 +299,8 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.WaitForP2:
-            currentStateText.SetText("P2's turn");
-            announcementText.SetText("AI is playing");
+            currentStateText.SetText("Player 2 <br>Your turn");
+            announcementText.SetText("AI is playing ...");
             UpdateWaitForP2();
             break;
 
@@ -293,7 +311,7 @@ public class StateMachine : MonoBehaviour
             break;
 
             case GameState.RoundFinished:
-            currentStateText.SetText("Round finished");
+            // currentStateText.SetText("Round finished");
             // announcementText.SetText(" ");
             UpdateRoundFinished();
             break;
