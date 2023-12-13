@@ -182,9 +182,9 @@ public class StateMachine : MonoBehaviour
             }
             else currentStateText.SetText("Game done <br>You lost !");
 
-            announcementText.SetText(" ");
+            announcementText.SetText("Thanks for playing !");
 
-            StartCoroutine(LoadScoresScene());
+            StartCoroutine(LoadStartScene());
         }
         else if (scoreManager.scoreP1 < scoreManager.winningScore || scoreManager.scoreP2 < scoreManager.winningScore)
         {
@@ -197,11 +197,11 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    private IEnumerator LoadScoresScene()
+    private IEnumerator LoadStartScene()
     {
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(20f);
         
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("ScoresScene");
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("StartScene");
 
         // Wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)
@@ -216,12 +216,12 @@ public class StateMachine : MonoBehaviour
 
         if (scoreManager.scoreP1 > scoreManager.scoreP2 || scoreManager.scoreP1 == scoreManager.scoreP2)
         {
-            currentStateText.SetText("P1 won this round");
+            currentStateText.SetText("Player 1 won this round");
         }
 
         else if (scoreManager.scoreP2 > scoreManager.scoreP1 || scoreManager.scoreP2 == scoreManager.scoreP1)
         {
-            currentStateText.SetText("P2 won this round");
+            currentStateText.SetText("Player 2 won this round");
         }
 
         float totalDelay = 10f;
