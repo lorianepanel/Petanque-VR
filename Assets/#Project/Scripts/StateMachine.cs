@@ -15,6 +15,8 @@ public class StateMachine : MonoBehaviour
     public UnityEvent whenStateChanged;
 
     public enum GameState{
+
+        None,
         WaitForGoal,
         GoalLaunched,
         WaitForP1,
@@ -42,15 +44,17 @@ public class StateMachine : MonoBehaviour
     private AIBehaviour aIBehaviour;
 
     private bool isRoundRestarting = false;
+
+    private bool hasStarted = false;
     
 
     void Start()
     {
-
         ballsManager = FindObjectOfType<BallsManager>();
         terrainInfo = FindObjectOfType<TerrainInfo>();
         scoreManager = FindObjectOfType<ScoreManager>();
         aIBehaviour = FindObjectOfType<AIBehaviour>();
+
 
         if (ballsManager == null || terrainInfo == null || scoreManager == null || aIBehaviour == null)
         {
@@ -58,12 +62,35 @@ public class StateMachine : MonoBehaviour
         }
         else
         {
-            state = GameState.WaitForGoal;
-            previousState = state;
-            ballsManager.CreateGoal();
-            ballsManager.CreateBall(1);
+            // Vérifiez si la coroutine de démarrage a déjà été exécutée
+            if (!hasStarted)
+            {
+                StartCoroutine(StartGameCoroutine());  
+            }
         }
     }
+
+    private IEnumerator StartGameCoroutine()
+    {
+        hasStarted = true;
+        Debug.Log("Game is starting...");
+        state = GameState.None;
+        
+        currentStateText.SetText($"P1 VS AI <br> Game in {scoreManager.winningScore} points");
+        announcementText.SetText(" ");
+
+        // Par exemple, attendez pendant quelques secondes
+        yield return new WaitForSeconds(20f);
+
+        // Maintenant, vous pouvez initialiser l'état comme avant
+        state = GameState.WaitForGoal;
+        previousState = state;
+        ballsManager.CreateGoal();
+        ballsManager.CreateBall(1);
+
+    }
+
+
 
 
     void Update()
@@ -191,6 +218,24 @@ public class StateMachine : MonoBehaviour
             
             if (!isRoundRestarting)
             {
+                // if (scoreManager.scoreP1 > scoreManager.scoreP2)
+                // {
+                //     currentStateText.SetText("Player 1 <br>won this round");
+                //     scoreManager.distanceText.SetText(" ");
+                // }
+
+                // else if (scoreManager.scoreP2 > scoreManager.scoreP1)
+                // {
+                //     currentStateText.SetText("Player 2 <br>won this round");
+                //     scoreManager.distanceText.SetText(" ");
+                // }
+                // else if (scoreManager.scoreP1 == scoreManager.scoreP2)
+                // {
+                //     currentStateText.SetText("Equality");
+                //     scoreManager.distanceText.SetText(" ");
+                // }
+
+                currentStateText.SetText("Round finished");
                 // Démarrer la Coroutine pour gérer le délai avant la suppression des balles et la réinitialisation du round
                 StartCoroutine(WaitAndRemoveCoroutine());
             }
@@ -214,16 +259,6 @@ public class StateMachine : MonoBehaviour
     {
         isRoundRestarting = true;
 
-        if (scoreManager.scoreP1 > scoreManager.scoreP2 || scoreManager.scoreP1 == scoreManager.scoreP2)
-        {
-            currentStateText.SetText("Player 1 won this round");
-        }
-
-        else if (scoreManager.scoreP2 > scoreManager.scoreP1 || scoreManager.scoreP2 == scoreManager.scoreP1)
-        {
-            currentStateText.SetText("Player 2 won this round");
-        }
-
         float totalDelay = 10f;
 
         while (totalDelay > 0f)
@@ -233,7 +268,6 @@ public class StateMachine : MonoBehaviour
             totalDelay -= 1f;
         }
         announcementText.SetText(" ");
-        scoreManager.distanceText.SetText(" ");
 
         ballsManager.RemoveAllBalls();
         ballsManager.ResetRound();

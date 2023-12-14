@@ -42,7 +42,7 @@ public class ScoreManager : MonoBehaviour
 
         BallBehaviour.PlayerNumber currentPlayerNumber;
         float distance = CheckTheDistance(out currentPlayerNumber);
-        distanceText.SetText($"{currentPlayerNumber} is the closest <br>{distance:f}m");   
+        distanceText.SetText($"{currentPlayerNumber} is closer <br>{distance:f}m");   
     }
 
 
