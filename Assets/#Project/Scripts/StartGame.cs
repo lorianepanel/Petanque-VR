@@ -21,4 +21,8 @@ public class StartGame : MonoBehaviour
             yield return null;
         }
     }
+
+    public void ExitGame() {
+    Application.Quit();
+    }
 }

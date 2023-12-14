@@ -76,11 +76,11 @@ public class StateMachine : MonoBehaviour
         Debug.Log("Game is starting...");
         state = GameState.None;
         
-        currentStateText.SetText($"P1 VS AI <br> Game in {scoreManager.winningScore} points");
-        announcementText.SetText(" ");
+        currentStateText.SetText($"YOU VS AI");
+        announcementText.SetText("Game starting ...");
 
         // Par exemple, attendez pendant quelques secondes
-        yield return new WaitForSeconds(20f);
+        yield return new WaitForSeconds(12f);
 
         // Maintenant, vous pouvez initialiser l'état comme avant
         state = GameState.WaitForGoal;
