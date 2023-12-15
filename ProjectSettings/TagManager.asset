@@ -9,6 +9,7 @@ TagManager:
   - Undefined
   - Ball
   - Goal
+  - Sol
   layers:
   - Default
   - TransparentFX
