@@ -8,7 +8,7 @@ using UnityEngine;
 public class GoalBehaviour : MonoBehaviour
 {
     private AudioSource audioSource;
-    // Start is called before the first frame update
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();

@@ -26,7 +26,7 @@ public class TerrainInfo : MonoBehaviour
     void OnTriggerEnter(Collider collider){
 
         listOfProjectiles.Add(collider.gameObject);
-        // Debug.Log($"{collider.name} is on the terrain.");
+        Debug.Log($"{collider.name} is on the terrain.");
 
         if(collider.CompareTag("Ball")){
             scoreManager.balls.Add(collider.gameObject);
@@ -36,6 +36,7 @@ public class TerrainInfo : MonoBehaviour
         grab = collider.GetComponent<XRGrabInteractable>();
         grab.enabled = false; 
     }
+
 
     void OnTriggerExit(Collider collider){
         listOfProjectiles.Remove(collider.gameObject);
@@ -58,7 +59,7 @@ public class TerrainInfo : MonoBehaviour
     public bool IsStable(GameObject projectile){
         rb = projectile.GetComponent<Rigidbody>();
         if (rb != null) {
-            return rb.velocity.magnitude < 0.1f;     
+            return rb.velocity.magnitude < 0.01f;     
         }
         return false;
     }

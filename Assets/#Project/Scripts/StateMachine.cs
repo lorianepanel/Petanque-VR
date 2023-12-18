@@ -35,6 +35,9 @@ public class StateMachine : MonoBehaviour
     [SerializeField]
     private TMP_Text announcementText;
 
+    [SerializeField]
+    private TMP_Text finishText;
+
     private TerrainInfo terrainInfo;
 
     private ScoreManager scoreManager;
@@ -76,11 +79,11 @@ public class StateMachine : MonoBehaviour
         Debug.Log("Game is starting...");
         state = GameState.None;
         
-        currentStateText.SetText($"YOU VS AI");
+        currentStateText.SetText($"P1 VS AI <br>Game in {scoreManager.winningScore} points");
         announcementText.SetText("Game starting ...");
 
         // Par exemple, attendez pendant quelques secondes
-        yield return new WaitForSeconds(12f);
+        yield return new WaitForSeconds(10f);
 
         // Maintenant, vous pouvez initialiser l'état comme avant
         state = GameState.WaitForGoal;
@@ -205,9 +208,14 @@ public class StateMachine : MonoBehaviour
 
             if (scoreManager.scoreP1 == scoreManager.winningScore)
             {
-                currentStateText.SetText("Game done <br>You won !");
+                currentStateText.SetText("Game done");
+                finishText.SetText("Congratulations ! <br>You won !");
             }
-            else currentStateText.SetText("Game done <br>You lost !");
+            else if (scoreManager.scoreP2 == scoreManager.winningScore)
+            {
+                currentStateText.SetText("Game done");
+                finishText.SetText("Sorry you lost !");
+            }
 
             announcementText.SetText("Thanks for playing !");
 
