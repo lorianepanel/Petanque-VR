@@ -122,6 +122,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 0
+  groundCollisionSound: {fileID: 8300000, guid: de5d2ef0af0738846a8c8551c6d44048,
+    type: 3}
+  otherBallCollisionSound: {fileID: 8300000, guid: 7d541d2c1e3e24c48befaa20eea8cc23,
+    type: 3}
 --- !u!54 &7263976043667195525
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -307,8 +311,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 89a90e45849bc214db31af8cafb3c6c6, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

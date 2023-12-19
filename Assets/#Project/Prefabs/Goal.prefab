@@ -296,6 +296,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47890c379e5283b40978855530bd4103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundCollisionSound: {fileID: 8300000, guid: 5d1911533323a134ab73371640bcb4ba,
+    type: 3}
+  otherBallCollisionSound: {fileID: 8300000, guid: 2ae042e930e87ed47b27c8133df7a7e7,
+    type: 3}
 --- !u!82 &7761372613354649485
 AudioSource:
   m_ObjectHideFlags: 0
@@ -306,8 +310,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 89a90e45849bc214db31af8cafb3c6c6, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 0.8
   m_Pitch: 1.71
   Loop: 0

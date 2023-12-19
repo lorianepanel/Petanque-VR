@@ -18,25 +18,34 @@ public class BallBehaviour : MonoBehaviour
     public static PlayerNumber[] playerNumbers = new PlayerNumber[2] { PlayerNumber.P1, PlayerNumber.P2};
     public PlayerNumber playerNumber;
 
+    public AudioClip groundCollisionSound;
+    public AudioClip otherBallCollisionSound;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
     }
 
-    
     void OnCollisionEnter(Collision collision)
     {
-        // Vérifier si la collision se produit avec le sol (ajuster le tag selon votre configuration)
+        
         if (collision.gameObject.CompareTag("Sol"))
         {
-            // Jouer le son
-            if (audioSource != null)
+            // Jouer le son pour le sol
+            if (audioSource != null && groundCollisionSound != null)
             {
+                audioSource.clip = groundCollisionSound;
+                audioSource.Play();
+            }
+        }
+        else if (collision.gameObject.CompareTag("Ball"))
+        {
+            // Jouer le son pour les autres balles
+            if (audioSource != null && otherBallCollisionSound != null)
+            {
+                audioSource.clip = otherBallCollisionSound;
                 audioSource.Play();
             }
         }
     }
-
-
 }
