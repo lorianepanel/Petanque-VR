@@ -227,7 +227,6 @@ public class StateMachine : MonoBehaviour
             if (!isRoundRestarting)
             {
                 currentStateText.SetText("Round finished");
-                scoreManager.distanceText.SetText(" ");
                 // Démarrer la Coroutine pour gérer le délai avant la suppression des balles et la réinitialisation du round
                 StartCoroutine(WaitAndRemoveCoroutine());
             }
@@ -251,7 +250,7 @@ public class StateMachine : MonoBehaviour
     {
         isRoundRestarting = true;
 
-        float totalDelay = 10f;
+        float totalDelay = 6f;
 
         while (totalDelay > 0f)
         {
@@ -259,15 +258,17 @@ public class StateMachine : MonoBehaviour
             yield return new WaitForSeconds(1f);
             totalDelay -= 1f;
         }
-        announcementText.SetText(" ");
 
         ballsManager.RemoveAllBalls();
         ballsManager.ResetRound();
 
         isRoundRestarting = false;
 
+        announcementText.SetText(" ");
+        scoreManager.distanceText.SetText(" ");
         // Changer l'état après la réinitialisation du round
         state = GameState.WaitForGoal;
+
     }
     
 
