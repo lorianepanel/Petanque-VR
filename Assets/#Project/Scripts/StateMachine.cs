@@ -226,24 +226,8 @@ public class StateMachine : MonoBehaviour
             
             if (!isRoundRestarting)
             {
-                // if (scoreManager.scoreP1 > scoreManager.scoreP2)
-                // {
-                //     currentStateText.SetText("Player 1 <br>won this round");
-                //     scoreManager.distanceText.SetText(" ");
-                // }
-
-                // else if (scoreManager.scoreP2 > scoreManager.scoreP1)
-                // {
-                //     currentStateText.SetText("Player 2 <br>won this round");
-                //     scoreManager.distanceText.SetText(" ");
-                // }
-                // else if (scoreManager.scoreP1 == scoreManager.scoreP2)
-                // {
-                //     currentStateText.SetText("Equality");
-                //     scoreManager.distanceText.SetText(" ");
-                // }
-
                 currentStateText.SetText("Round finished");
+                scoreManager.distanceText.SetText(" ");
                 // Démarrer la Coroutine pour gérer le délai avant la suppression des balles et la réinitialisation du round
                 StartCoroutine(WaitAndRemoveCoroutine());
             }
@@ -252,7 +236,7 @@ public class StateMachine : MonoBehaviour
 
     private IEnumerator LoadStartScene()
     {
-        yield return new WaitForSeconds(20f);
+        yield return new WaitForSeconds(10f);
         
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("StartScene");
 

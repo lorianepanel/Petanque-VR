@@ -11,7 +11,7 @@ public class StartGame : MonoBehaviour
 
     private IEnumerator LoadGameScene()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("InGame");
 
