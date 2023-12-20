@@ -216,7 +216,7 @@ PrefabInstance:
     - target: {fileID: 8825629250815810274, guid: 152f4fcf212d58c49863579edcb89895,
         type: 3}
       propertyPath: winningScore
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 227616474106627991, guid: 152f4fcf212d58c49863579edcb89895, type: 3}

@@ -150,7 +150,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 213030329}
   m_LocalRotation: {x: -0.0323876, y: -0.9994754, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -299.8}
+  m_LocalPosition: {x: 0, y: 0, z: -237.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 3.712}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 80.5}
+  m_AnchoredPosition: {x: 0, y: 51.1}
   m_SizeDelta: {x: 100, y: 10}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &213030331
@@ -285,7 +285,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 345513777}
   m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -299.8}
+  m_LocalPosition: {x: 0, y: 0, z: -237.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -293,8 +293,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 60.8}
-  m_SizeDelta: {x: 250, y: 120}
+  m_AnchoredPosition: {x: 0, y: 39.1}
+  m_SizeDelta: {x: 120, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &345513779
 MonoBehaviour:
@@ -318,31 +318,35 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'This game is a school project
 
-    made for the end of the year
+    made in 2023 for the end of the year
 
     at
-    Interface3 - Brussels.
+    Interface3 in Brussels.
 
 
     Font in use : Komodo Land
 
-    Music : Sea Hunt
-    by Patrick Cowley
+    Free assets by :
+    Snowconesolid, The Cloud Creator, 3D.BJ, 3 White Lines, Ak Studio Art, JustCreate,
+    Einthel, Meowvorty, BG Studio, Ignite Coders
+
+    Music : Sea Hunt by Patrick
+    Cowley
 
 
     Thanks to :
 
     My teachers Thomas and Bastien,
 
-    My
-    coach and beta tester Roxanne,
+    My coach and
+    beta tester Roxanne,
 
-    Nicole and all my schoolmates,
+    Nicole and all my classmates,
 
-    The P.P.T.
-    Club
+    The P.P.C. members,
 
-    And all my friends who played
+    And
+    all my friends who played
 
     petanque with me !
 
@@ -374,19 +378,19 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 8
-  m_fontSizeBase: 8
+  m_fontSize: 5
+  m_fontSizeBase: 5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 2
   m_wordSpacing: 0
-  m_lineSpacing: 5
+  m_lineSpacing: 8
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
